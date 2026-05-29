@@ -12,10 +12,39 @@ export type Language = "zh" | "en";
 
 export type LocalizedText = Record<Language, string>;
 
+export type TopicTerm = {
+  name: LocalizedText;
+  explanation: LocalizedText;
+};
+
+export type TopicDiagram = {
+  type: "sound-wave";
+  label: LocalizedText;
+  caption: LocalizedText;
+};
+
+export type TopicLab = {
+  type: "sampling-quantization";
+  title: LocalizedText;
+  description: LocalizedText;
+  buttonLabel: LocalizedText;
+};
+
+export type TopicDetail = {
+  explanation: LocalizedText;
+  keyConcepts: LocalizedText[];
+  termExplanations?: TopicTerm[];
+  diagram?: TopicDiagram;
+  lab?: TopicLab;
+  misconception: LocalizedText;
+  contentDirection: LocalizedText;
+};
+
 export type Topic = {
   title: LocalizedText;
   summary: LocalizedText;
   bullets: LocalizedText[];
+  detail: TopicDetail;
 };
 
 export type Category = {
@@ -61,11 +90,12 @@ export const interfaceCopy = {
   noResults: { zh: "没有找到匹配主题。", en: "No matching topics found." },
   detailsLabel: { zh: "主题详情", en: "Topic details" },
   closeDetails: { zh: "关闭详情", en: "Close details" },
-  detailsExpandTitle: { zh: "后续扩展方向", en: "Expansion direction" },
-  detailsExpandBody: {
-    zh: "可扩展为一篇专题文章，加入图解、关键指标、常见误区和真实应用案例。",
-    en: "Can be expanded into a topic article with diagrams, key metrics, common misconceptions, and real-world examples."
-  },
+  detailsExplanationTitle: { zh: "详细解释", en: "Detailed explanation" },
+  detailsRelatedTermsTitle: { zh: "相关知识点逐条解释", en: "Related knowledge explained" },
+  detailsConceptsTitle: { zh: "关键概念", en: "Key concepts" },
+  detailsDiagramTitle: { zh: "交互式正弦波图解", en: "Interactive sine wave diagram" },
+  detailsMisconceptionTitle: { zh: "常见误区", en: "Common misconception" },
+  detailsContentDirectionTitle: { zh: "内容扩展建议", en: "Content expansion idea" },
   detailsFormatTitle: { zh: "适合内容形式", en: "Best content formats" },
   detailsFormats: {
     zh: "文章 / 图解 / 案例 / 交互说明",
@@ -104,7 +134,78 @@ export const categories: Category[] = [
           { zh: "频率、振幅、相位、波长", en: "Frequency, amplitude, phase, wavelength" },
           { zh: "人耳听觉范围", en: "Human hearing range" },
           { zh: "声音产生、传播和感知", en: "Generation, propagation, and perception" }
-        ]
+        ],
+        detail: {
+          explanation: {
+            zh: "声音本质上是物体振动引起的压力变化。振动通过空气、水或固体传播到耳朵，耳膜和内耳把这些压力变化转换成神经信号，大脑再把它们理解成音高、响度、音色和方向。",
+            en: "Sound is a pressure variation caused by vibration. The vibration travels through air, water, or solids to the ear, where the eardrum and inner ear convert it into neural signals that the brain interprets as pitch, loudness, timbre, and direction."
+          },
+          keyConcepts: [
+            { zh: "频率决定音高，振幅通常影响响度。", en: "Frequency shapes pitch, while amplitude usually affects loudness." },
+            { zh: "相位描述波形在周期中的位置，多个声音叠加时会影响抵消或增强。", en: "Phase describes position within a waveform cycle and affects cancellation or reinforcement when sounds combine." },
+            { zh: "波长和传播速度相关，同一频率在不同介质中的波长不同。", en: "Wavelength depends on propagation speed, so the same frequency has different wavelengths in different media." }
+          ],
+          termExplanations: [
+            {
+              name: { zh: "频率", en: "Frequency" },
+              explanation: {
+                zh: "频率表示声波每秒振动的次数，单位是赫兹 Hz。频率越高，通常听起来音调越高；频率越低，通常听起来越低沉。",
+                en: "Frequency is the number of waveform cycles per second, measured in hertz. Higher frequency usually sounds like a higher pitch, while lower frequency usually sounds deeper."
+              }
+            },
+            {
+              name: { zh: "振幅", en: "Amplitude" },
+              explanation: {
+                zh: "振幅表示压力变化的幅度，反映声波偏离平衡位置的大小。振幅越大，通常能量越强，听起来也更响，但实际响度还受频率和人耳敏感度影响。",
+                en: "Amplitude is the size of the pressure change, showing how far the wave moves away from its resting level. Larger amplitude usually means more energy and louder sound, though perceived loudness also depends on frequency and hearing sensitivity."
+              }
+            },
+            {
+              name: { zh: "相位", en: "Phase" },
+              explanation: {
+                zh: "相位描述声波在一个周期中走到哪里。两个相同频率的声音相位接近时会增强，相位相反时可能互相抵消，这也是降噪和阵列处理的重要基础。",
+                en: "Phase describes where a wave is within its cycle. Two sounds with similar frequency can reinforce each other when aligned, or cancel when opposite, which is important for noise cancellation and array processing."
+              }
+            },
+            {
+              name: { zh: "波长", en: "Wavelength" },
+              explanation: {
+                zh: "波长是声波完成一个周期所占的空间距离。低频声音波长更长，更容易绕过障碍物；高频声音波长更短，更容易被遮挡或吸收。",
+                en: "Wavelength is the physical distance of one full cycle. Low-frequency sound has longer wavelengths and bends around obstacles more easily; high-frequency sound has shorter wavelengths and is blocked or absorbed more easily."
+              }
+            },
+            {
+              name: { zh: "人耳听觉范围", en: "Human hearing range" },
+              explanation: {
+                zh: "多数年轻人可听到大约 20 Hz 到 20 kHz 的声音，但年龄、环境噪声和个体差异会改变实际范围。人耳对 2 kHz 到 5 kHz 附近通常更敏感。",
+                en: "Many young listeners can hear roughly 20 Hz to 20 kHz, but age, noise exposure, and individual differences change the actual range. Human hearing is often more sensitive around 2 kHz to 5 kHz."
+              }
+            },
+            {
+              name: { zh: "传播介质", en: "Propagation medium" },
+              explanation: {
+                zh: "声音需要介质传递压力变化。空气中的声速约为 343 m/s，水和固体中的速度通常更快，因此同样频率在不同介质中的波长也不同。",
+                en: "Sound needs a medium to carry pressure changes. In air the speed of sound is about 343 m/s, while it is usually faster in water and solids, so the same frequency has different wavelengths in different media."
+              }
+            }
+          ],
+          diagram: {
+            type: "sound-wave",
+            label: { zh: "声波频率、振幅、相位和波长图解", en: "Diagram of sound-wave frequency, amplitude, phase, and wavelength" },
+            caption: {
+              zh: "同样的振幅下，高频波形周期更密；同样的频率下，振幅越大代表压力变化越强。波长对应一个完整周期在空间中的距离。",
+              en: "At the same amplitude, higher frequency creates tighter cycles. At the same frequency, larger amplitude means stronger pressure variation. Wavelength is the spatial distance of one full cycle."
+            }
+          },
+          misconception: {
+            zh: "声音不是只存在于空气中的东西，它需要介质传播，但介质可以是气体、液体或固体；真空中没有普通声波传播。",
+            en: "Sound is not limited to air. It needs a medium, which can be gas, liquid, or solid; ordinary sound waves do not propagate through a vacuum."
+          },
+          contentDirection: {
+            zh: "上方交互实验已经把频率、振幅、相位和播放音高连接起来；后续可以继续补充谐波、噪声和真实乐器波形对比。",
+            en: "The interactive experiment above already connects frequency, amplitude, phase, and audible pitch; next it can add harmonics, noise, and real-instrument waveform comparisons."
+          }
+        }
       },
       {
         title: { zh: "数字音频基础", en: "Digital Audio Basics" },
@@ -116,7 +217,87 @@ export const categories: Category[] = [
           { zh: "采样定理", en: "Sampling theorem" },
           { zh: "采样率、位深、动态范围", en: "Sample rate, bit depth, dynamic range" },
           { zh: "WAV、MP3、AAC、FLAC、Opus", en: "WAV, MP3, AAC, FLAC, Opus" }
-        ]
+        ],
+        detail: {
+          explanation: {
+            zh: "数字音频把连续的声波转换成一串离散数字。采样率决定每秒记录多少个点，位深决定每个点能表达多细的幅度变化，编码格式则决定这些数字如何保存、压缩和传输。",
+            en: "Digital audio turns a continuous waveform into discrete numbers. Sample rate controls how many points are captured per second, bit depth controls amplitude precision, and the encoding format defines how those numbers are stored, compressed, and transmitted."
+          },
+          keyConcepts: [
+            { zh: "采样率决定时间轴上的记录密度，常见音乐和视频音频会使用 44.1 kHz 或 48 kHz。", en: "Sample rate determines density along the time axis; music and video commonly use 44.1 kHz or 48 kHz." },
+            { zh: "奈奎斯特采样定理说明采样率至少要高于最高有效频率的两倍，采样前通常需要抗混叠滤波。", en: "The Nyquist theorem says the sample rate must be more than twice the highest useful frequency, so anti-alias filtering is usually needed before sampling." },
+            { zh: "位深影响量化噪声和理论动态范围，16-bit 常用于发行，24-bit 常用于录音和制作。", en: "Bit depth affects quantization noise and theoretical dynamic range; 16-bit is common for delivery, while 24-bit is common for recording and production." },
+            { zh: "编码把采样值组织成文件或码流，PCM 保留原始采样，FLAC 无损压缩，MP3、AAC、Opus 有损压缩。", en: "Encoding organizes samples into files or streams: PCM preserves raw samples, FLAC compresses losslessly, and MP3, AAC, and Opus compress lossily." }
+          ],
+          termExplanations: [
+            {
+              name: { zh: "采样", en: "Sampling" },
+              explanation: {
+                zh: "采样把连续时间中的模拟波形按固定时间间隔记录成一个个离散点。采样率越高，每秒记录的点越多，时间细节越容易保留；采样率不足时，高频内容可能被误判成低频，这叫混叠。",
+                en: "Sampling records a continuous-time analog waveform as discrete points at fixed time intervals. A higher sample rate captures more points per second and preserves time detail more easily; if it is too low, high-frequency content can appear as a false lower frequency, called aliasing."
+              }
+            },
+            {
+              name: { zh: "量化", en: "Quantization" },
+              explanation: {
+                zh: "量化把连续幅度映射到有限个数字等级。位深越高，可用等级越多，量化误差越小，理论动态范围越大；位深较低时，波形会变成更明显的阶梯，并产生更容易听到的量化噪声。",
+                en: "Quantization maps continuous amplitude to a finite set of numeric levels. Higher bit depth provides more levels, lower quantization error, and wider theoretical dynamic range; low bit depth creates more obvious stair-steps and more audible quantization noise."
+              }
+            },
+            {
+              name: { zh: "编码", en: "Encoding" },
+              explanation: {
+                zh: "编码决定这些采样值如何组织、封装、压缩和传输。PCM 不是压缩算法，而是把每个量化后的采样值按固定字长顺序写成二进制样本；WAV 常封装 PCM 原始采样，FLAC 做无损压缩，MP3、AAC、Opus 会进一步做感知压缩。",
+                en: "Encoding defines how sample values are organized, wrapped, compressed, and transmitted. PCM is not a compression algorithm; it writes each quantized sample as a fixed-width binary word in sequence. WAV often wraps raw PCM, FLAC compresses losslessly, while MP3, AAC, and Opus add perceptual compression."
+              }
+            },
+            {
+              name: { zh: "采样率", en: "Sample rate" },
+              explanation: {
+                zh: "采样率是每秒采样次数，单位是 Hz。44.1 kHz 表示每秒 44100 个采样点；48 kHz 常用于视频、会议和系统音频。采样率提高会增加数据量，但不自动等于更好听。",
+                en: "Sample rate is the number of samples per second, measured in Hz. 44.1 kHz means 44,100 samples per second; 48 kHz is common for video, conferencing, and system audio. Raising it increases data size but does not automatically sound better."
+              }
+            },
+            {
+              name: { zh: "位深", en: "Bit depth" },
+              explanation: {
+                zh: "位深表示每个采样点用多少位二进制描述幅度。n-bit 可以表示 2 的 n 次方个幅度等级。16-bit 理论动态范围约 96 dB，24-bit 理论动态范围约 144 dB。",
+                en: "Bit depth is how many binary bits describe each sample's amplitude. n-bit audio can represent 2^n amplitude levels. 16-bit has about 96 dB theoretical dynamic range, while 24-bit has about 144 dB."
+              }
+            },
+            {
+              name: { zh: "码率", en: "Bitrate" },
+              explanation: {
+                zh: "码率表示每秒音频数据量，通常用 kbps 表示。无压缩 PCM 的码率由采样率、位深和通道数决定；有损编码的码率还受到编码器算法和内容复杂度影响。",
+                en: "Bitrate is the amount of audio data per second, often shown in kbps. Uncompressed PCM bitrate comes from sample rate, bit depth, and channel count; lossy codec bitrate is also affected by codec design and content complexity."
+              }
+            },
+            {
+              name: { zh: "PCM", en: "PCM" },
+              explanation: {
+                zh: "PCM 的完整过程是：先采样得到时间点，再量化得到幅度等级，最后把每个等级转换成固定位数的整数样本。播放器按采样率、位深和声道顺序读取这些样本，就能还原出连续播放的数字音频流。",
+                en: "PCM works by sampling time points, quantizing amplitude levels, then converting each level into a fixed-width integer sample. Playback reads those samples according to sample rate, bit depth, and channel order to reconstruct a continuous digital audio stream."
+              }
+            }
+          ],
+          lab: {
+            type: "sampling-quantization",
+            title: { zh: "采样、量化与编码实验室", en: "Sampling, Quantization, and Encoding Lab" },
+            description: {
+              zh: "进入独立界面调节采样率、位深和输入频率，观察采样点、量化阶梯、PCM 编码和常见压缩格式如何连接。",
+              en: "Open an independent lab to adjust sample rate, bit depth, and input frequency while connecting samples, quantized steps, PCM encoding, and common compressed formats."
+            },
+            buttonLabel: { zh: "打开采样、量化与编码实验室", en: "Open sampling, quantization, and encoding lab" }
+          },
+          misconception: {
+            zh: "采样率越高并不一定代表最终听感越好，码率相同也不代表不同编码器音质相同；录音、混音、播放链路、编码器实现和内容类型往往同样重要。",
+            en: "A higher sample rate does not automatically mean better perceived quality, and equal bitrate does not mean equal quality across codecs; recording, mixing, playback hardware, codec implementation, and content type often matter just as much."
+          },
+          contentDirection: {
+            zh: "适合做采样点可视化、量化阶梯图和不同编码格式对比表，解释音质、文件大小和延迟之间的取舍。",
+            en: "This can become a sampling visualization, quantization staircase diagram, and codec comparison table explaining trade-offs among quality, file size, and latency."
+          }
+        }
       },
       {
         title: { zh: "听感与指标", en: "Listening Perception and Metrics" },
@@ -128,7 +309,26 @@ export const categories: Category[] = [
           { zh: "响度、音色、清晰度", en: "Loudness, timbre, clarity" },
           { zh: "频响、SPL、THD", en: "Frequency response, SPL, THD" },
           { zh: "主观评价与客观测量", en: "Subjective evaluation and objective measurement" }
-        ]
+        ],
+        detail: {
+          explanation: {
+            zh: "听感是人对声音的综合判断，受到响度、频率分布、瞬态、失真、空间反射和个人经验影响。工程指标能帮助定位问题，但需要结合实际试听和场景目标解读。",
+            en: "Listening perception is a combined judgment shaped by loudness, frequency balance, transients, distortion, spatial reflections, and personal experience. Engineering metrics help locate issues, but they must be interpreted with listening tests and product goals."
+          },
+          keyConcepts: [
+            { zh: "响度和声压级不同，LUFS 更适合描述节目整体响度。", en: "Loudness and sound pressure level are different; LUFS is better for program loudness." },
+            { zh: "频响曲线描述不同频率的能量变化，但不能单独决定音质。", en: "Frequency response describes energy variation by frequency, but it does not determine quality alone." },
+            { zh: "THD、SNR、延迟、串扰等指标分别反映失真、噪声、同步和通道隔离问题。", en: "THD, SNR, latency, and crosstalk describe distortion, noise, synchronization, and channel separation issues." }
+          ],
+          misconception: {
+            zh: "一个漂亮的指标不能代表完整听感；同样的曲线在不同房间、耳机佩戴方式和内容类型下可能听起来完全不同。",
+            en: "One impressive metric cannot represent the whole listening experience; the same curve can sound different across rooms, headphone fits, and content types."
+          },
+          contentDirection: {
+            zh: "适合扩展为指标速查卡、主观听感词典和真实测量案例，帮助读者建立“听到什么，对应可能是什么指标”的判断路径。",
+            en: "This can become a metric cheat sheet, listening vocabulary guide, and measurement case study that maps perceived problems to likely indicators."
+          }
+        }
       }
     ]
   },
@@ -152,7 +352,26 @@ export const categories: Category[] = [
           { zh: "灵敏度、信噪比、指向性", en: "Sensitivity, SNR, directivity" },
           { zh: "模拟麦克风与数字麦克风", en: "Analog and digital microphones" },
           { zh: "麦克风阵列基础", en: "Microphone array basics" }
-        ]
+        ],
+        detail: {
+          explanation: {
+            zh: "麦克风是把空气压力变化转换成电信号的传感器。不同类型麦克风在灵敏度、噪声、体积、成本、供电和抗干扰能力上差异很大，产品选择要结合拾音距离、声学环境和后端处理能力。",
+            en: "A microphone is a sensor that converts air pressure changes into an electrical signal. Microphone types differ in sensitivity, noise, size, cost, power needs, and interference resistance, so selection depends on pickup distance, acoustics, and downstream processing."
+          },
+          keyConcepts: [
+            { zh: "灵敏度表示同样声压下输出信号大小，信噪比反映有效语音和底噪的差距。", en: "Sensitivity describes output level for a given sound pressure, while SNR shows the gap between useful sound and noise." },
+            { zh: "指向性决定麦克风更容易收哪些方向的声音，影响远场拾音和抗噪能力。", en: "Polar pattern controls which directions are captured more strongly, affecting far-field pickup and noise rejection." },
+            { zh: "MEMS 数字麦克风常用于手机、耳机和 IoT 设备，便于小体积阵列设计。", en: "Digital MEMS microphones are common in phones, earbuds, and IoT devices, making compact array design easier." }
+          ],
+          misconception: {
+            zh: "更贵的麦克风不能自动解决糟糕声学环境；房间混响、安装位置和结构噪声经常比麦克风型号更关键。",
+            en: "A more expensive microphone does not automatically fix bad acoustics; room reverberation, placement, and mechanical noise are often more important than the model."
+          },
+          contentDirection: {
+            zh: "适合做麦克风类型对比、指向性极坐标图和阵列拾音示意图，连接硬件规格与真实录音效果。",
+            en: "This fits a microphone type comparison, polar pattern diagrams, and array pickup illustrations linking hardware specifications to real recordings."
+          }
+        }
       },
       {
         title: { zh: "ADC / DAC / Codec", en: "ADC / DAC / Codec" },
@@ -164,7 +383,26 @@ export const categories: Category[] = [
           { zh: "ADC 和 DAC 指标", en: "ADC and DAC specifications" },
           { zh: "音频 Codec 芯片", en: "Audio codec chips" },
           { zh: "时钟、抖动、电源噪声", en: "Clocking, jitter, power noise" }
-        ]
+        ],
+        detail: {
+          explanation: {
+            zh: "ADC 把模拟音频转换为数字采样，DAC 把数字采样还原为模拟信号，音频 Codec 芯片通常把 ADC、DAC、放大、混音和接口集成在一起。这个链路决定了噪声底、动态范围、失真和系统可调能力。",
+            en: "An ADC converts analog audio into digital samples, while a DAC reconstructs analog signals from digital samples. An audio codec chip often integrates ADCs, DACs, amplifiers, mixers, and interfaces, shaping noise floor, dynamic range, distortion, and system control."
+          },
+          keyConcepts: [
+            { zh: "前端增益和输入范围决定是否容易削波或把底噪一起放大。", en: "Front-end gain and input range determine whether signals clip or amplify the noise floor." },
+            { zh: "时钟抖动会影响采样时间稳定性，电源噪声可能进入模拟链路。", en: "Clock jitter affects sampling-time stability, and power noise can leak into the analog path." },
+            { zh: "I2S、PDM、TDM 等接口决定芯片之间如何传递音频数据。", en: "I2S, PDM, TDM, and similar interfaces define how chips exchange audio data." }
+          ],
+          misconception: {
+            zh: "硬件 Codec 芯片和 MP3、AAC 这类编解码算法不是同一个概念；前者是音频转换和接口芯片，后者是压缩格式算法。",
+            en: "A hardware codec chip is not the same thing as an MP3 or AAC codec algorithm; the former handles conversion and interfaces, while the latter compresses audio data."
+          },
+          contentDirection: {
+            zh: "适合扩展为从麦克风到扬声器的硬件链路图，并用指标说明每一级可能引入的噪声、失真和延迟。",
+            en: "This can become a microphone-to-speaker hardware chain diagram that labels where noise, distortion, and latency can enter each stage."
+          }
+        }
       },
       {
         title: { zh: "功放与扬声器", en: "Amplifiers and Speakers" },
@@ -176,7 +414,26 @@ export const categories: Category[] = [
           { zh: "Class A / AB / D", en: "Class A / AB / D" },
           { zh: "频响、灵敏度、阻抗", en: "Frequency response, sensitivity, impedance" },
           { zh: "TWS 和嵌入式音频链路", en: "TWS and embedded audio chains" }
-        ]
+        ],
+        detail: {
+          explanation: {
+            zh: "功放负责把音频信号放大到能驱动扬声器的功率，扬声器再把电能转换成机械振动和空气声波。实际声音表现同时受功放效率、扬声器单元、箱体结构、分频和保护算法影响。",
+            en: "An amplifier raises an audio signal to a power level that can drive a speaker, and the speaker converts electrical energy into mechanical motion and sound waves. The result depends on amplifier efficiency, driver design, enclosure, crossover, and protection algorithms."
+          },
+          keyConcepts: [
+            { zh: "Class D 功放效率高，适合电池供电和小体积设备，但布局和滤波仍然重要。", en: "Class D amplifiers are efficient for battery-powered and compact devices, but layout and filtering still matter." },
+            { zh: "阻抗、灵敏度和功率共同决定可达到的声压和热负载。", en: "Impedance, sensitivity, and power together determine achievable sound pressure and thermal load." },
+            { zh: "箱体容积、出音孔和结构密封会显著影响低频和失真。", en: "Enclosure volume, vents, and sealing strongly affect bass response and distortion." }
+          ],
+          misconception: {
+            zh: "瓦数更大不等于一定更响或更好听；扬声器效率、散热、失真控制和保护策略同样重要。",
+            en: "More watts do not guarantee louder or better sound; speaker efficiency, heat, distortion control, and protection strategy matter as well."
+          },
+          contentDirection: {
+            zh: "适合做 Class D 工作原理图、小音箱声学限制案例和 TWS 耳机播放链路拆解。",
+            en: "This fits a Class D explainer, small-speaker acoustic limitation case study, and TWS earbud playback-chain breakdown."
+          }
+        }
       }
     ]
   },
@@ -200,7 +457,26 @@ export const categories: Category[] = [
           { zh: "驱动与系统音频服务", en: "Drivers and system audio services" },
           { zh: "采集链路和播放链路", en: "Capture and playback chains" },
           { zh: "全双工音频", en: "Full-duplex audio" }
-        ]
+        ],
+        detail: {
+          explanation: {
+            zh: "系统音频架构连接应用、系统服务、驱动和硬件。它负责权限、路由、混音、重采样、音量控制、设备切换和全双工同步，是音频应用能稳定运行的基础。",
+            en: "System audio architecture connects applications, system services, drivers, and hardware. It handles permissions, routing, mixing, resampling, volume control, device switching, and full-duplex synchronization, forming the foundation for stable audio apps."
+          },
+          keyConcepts: [
+            { zh: "ALSA、AudioFlinger、Core Audio、WASAPI 等分别代表不同系统中的音频层次。", en: "ALSA, AudioFlinger, Core Audio, WASAPI, and similar systems represent audio layers on different platforms." },
+            { zh: "音频路由决定数据进入扬声器、耳机、蓝牙还是虚拟设备。", en: "Audio routing decides whether data goes to speakers, headphones, Bluetooth, or virtual devices." },
+            { zh: "混音和重采样会改变延迟和 CPU 占用，也可能影响质量。", en: "Mixing and resampling affect latency and CPU usage and can also influence quality." }
+          ],
+          misconception: {
+            zh: "应用通常不是直接把数据写到扬声器，而是经过系统音频服务、驱动和硬件接口，任何一层都可能影响延迟和稳定性。",
+            en: "Applications usually do not write directly to speakers; audio passes through system services, drivers, and hardware interfaces, and each layer can affect latency and stability."
+          },
+          contentDirection: {
+            zh: "适合做跨平台音频栈分层图，并用录音、播放、蓝牙输出三个流程展示数据如何流动。",
+            en: "This can become a cross-platform audio stack diagram with capture, playback, and Bluetooth-output flows."
+          }
+        }
       },
       {
         title: { zh: "实时音频处理", en: "Real-Time Audio Processing" },
@@ -212,7 +488,26 @@ export const categories: Category[] = [
           { zh: "Buffer size 与 latency", en: "Buffer size and latency" },
           { zh: "实时线程与回调", en: "Real-time threads and callbacks" },
           { zh: "卡顿、爆音、杂音排查", en: "Debugging glitches, pops, and noise" }
-        ]
+        ],
+        detail: {
+          explanation: {
+            zh: "实时音频处理要求每一小块音频都在截止时间前完成计算。只要回调线程被阻塞、CPU 峰值过高或 buffer 供给不连续，就可能出现卡顿、爆音、断续和延迟增加。",
+            en: "Real-time audio processing requires each small audio block to be computed before its deadline. If the callback thread blocks, CPU spikes, or buffers are not supplied continuously, users may hear glitches, pops, dropouts, or increased latency."
+          },
+          keyConcepts: [
+            { zh: "Buffer 越小延迟越低，但留给处理的时间也越少。", en: "Smaller buffers reduce latency but leave less time for processing." },
+            { zh: "实时回调中应避免阻塞 IO、锁竞争、动态内存分配和不可预测操作。", en: "Real-time callbacks should avoid blocking IO, lock contention, dynamic allocation, and unpredictable operations." },
+            { zh: "XRUN、underrun、overrun 是定位播放或采集不连续的重要线索。", en: "XRUN, underrun, and overrun events are important clues for playback or capture discontinuity." }
+          ],
+          misconception: {
+            zh: "把 buffer 调到最小不一定最好；设备性能、系统调度、算法复杂度和稳定性需要一起平衡。",
+            en: "The smallest buffer is not always best; device performance, scheduler behavior, algorithm cost, and stability must be balanced."
+          },
+          contentDirection: {
+            zh: "适合做实时回调时间线、不同 buffer 大小的延迟对比，以及卡顿问题排查清单。",
+            en: "This fits a real-time callback timeline, latency comparisons for buffer sizes, and a glitch debugging checklist."
+          }
+        }
       },
       {
         title: { zh: "音频编解码", en: "Audio Codecs" },
@@ -224,7 +519,26 @@ export const categories: Category[] = [
           { zh: "MP3、AAC、Opus、LC3", en: "MP3, AAC, Opus, LC3" },
           { zh: "SBC、aptX、LDAC", en: "SBC, aptX, LDAC" },
           { zh: "编码延迟与码率", en: "Encoding latency and bitrate" }
-        ]
+        ],
+        detail: {
+          explanation: {
+            zh: "音频编解码器决定声音如何被压缩、传输和还原。无损编码保留原始信息，有损编码利用人耳掩蔽效应丢弃不易察觉的信息，蓝牙和实时通信还要额外考虑延迟、丢包和功耗。",
+            en: "Audio codecs determine how sound is compressed, transmitted, and reconstructed. Lossless codecs preserve original information, lossy codecs discard less audible information using hearing models, and Bluetooth or real-time communication codecs must also handle latency, packet loss, and power."
+          },
+          keyConcepts: [
+            { zh: "码率影响文件大小和压缩余量，但不同编码器在同码率下质量不同。", en: "Bitrate affects file size and compression headroom, but different codecs have different quality at the same bitrate." },
+            { zh: "帧长和算法复杂度会影响端到端延迟。", en: "Frame size and algorithmic complexity affect end-to-end latency." },
+            { zh: "Opus、LC3 等更适合低延迟或通信场景，FLAC 更适合无损归档。", en: "Opus and LC3 are useful for low-latency or communication scenarios, while FLAC is better for lossless archiving." }
+          ],
+          misconception: {
+            zh: "相同码率不代表相同音质或相同延迟；编码器实现、内容类型和传输环境都会改变结果。",
+            en: "The same bitrate does not mean the same quality or latency; encoder implementation, content type, and network conditions change the result."
+          },
+          contentDirection: {
+            zh: "适合做格式对比表、蓝牙 Codec 延迟路径图和不同码率试听素材说明。",
+            en: "This can become a codec comparison table, Bluetooth latency path diagram, and listening guide for different bitrates."
+          }
+        }
       }
     ]
   },
@@ -248,7 +562,26 @@ export const categories: Category[] = [
           { zh: "FFT / STFT", en: "FFT / STFT" },
           { zh: "低通、高通、带通、陷波", en: "Low-pass, high-pass, band-pass, notch filters" },
           { zh: "EQ、DRC、Limiter", en: "EQ, DRC, limiter" }
-        ]
+        ],
+        detail: {
+          explanation: {
+            zh: "基础信号处理把音频从时间域、频率域和能量变化三个角度分析。FFT/STFT 用来观察频谱，滤波器和 EQ 用来改变频率能量，动态处理器用来控制响度和瞬态。",
+            en: "Core signal processing analyzes audio through time, frequency, and energy changes. FFT/STFT reveal spectra, filters and EQ reshape frequency energy, and dynamics processors control loudness and transients."
+          },
+          keyConcepts: [
+            { zh: "窗口长度影响时间分辨率和频率分辨率，是 STFT 的核心取舍。", en: "Window length trades time resolution against frequency resolution, which is central to STFT." },
+            { zh: "滤波器的截止频率、斜率、Q 值决定频率响应形状。", en: "Filter cutoff frequency, slope, and Q determine the response shape." },
+            { zh: "压缩器、限幅器通过阈值、比率、启动和释放时间改变动态范围。", en: "Compressors and limiters alter dynamic range through threshold, ratio, attack, and release." }
+          ],
+          misconception: {
+            zh: "FFT 只是分析工具，不会自动让声音变好；真正改变声音还需要滤波、增益、重建或其他处理策略。",
+            en: "FFT is an analysis tool and does not improve sound by itself; changing sound requires filtering, gain changes, reconstruction, or another processing strategy."
+          },
+          contentDirection: {
+            zh: "适合做频谱瀑布图、滤波器响应交互控件和压缩器参数前后对比。",
+            en: "This fits spectrogram visuals, interactive filter response controls, and before-after compressor parameter examples."
+          }
+        }
       },
       {
         title: { zh: "语音增强", en: "Speech Enhancement" },
@@ -260,7 +593,26 @@ export const categories: Category[] = [
           { zh: "Noise Suppression", en: "Noise suppression" },
           { zh: "AEC、AGC、VAD", en: "AEC, AGC, VAD" },
           { zh: "Beamforming 与 Dereverberation", en: "Beamforming and dereverberation" }
-        ]
+        ],
+        detail: {
+          explanation: {
+            zh: "语音增强的目标是在复杂环境中让人声更清楚、更稳定。它通常组合降噪、回声消除、自动增益、语音活动检测、波束成形和去混响，用于通话、会议、语音助手和录音场景。",
+            en: "Speech enhancement aims to make speech clearer and more stable in complex environments. It often combines noise suppression, echo cancellation, automatic gain control, voice activity detection, beamforming, and dereverberation for calls, meetings, assistants, and recording."
+          },
+          keyConcepts: [
+            { zh: "AEC 处理扬声器声音被麦克风再次收进来的回声问题。", en: "AEC handles echo caused by loudspeaker audio being picked up again by the microphone." },
+            { zh: "VAD 判断当前帧是否包含语音，是降噪和唤醒链路的重要基础。", en: "VAD detects whether a frame contains speech and supports noise suppression and wake-word pipelines." },
+            { zh: "波束成形利用多麦克风的时间差和相位差增强目标方向。", en: "Beamforming uses time and phase differences across microphones to enhance a target direction." }
+          ],
+          misconception: {
+            zh: "语音增强不能无损移除所有噪声；强处理可能带来金属音、吞字、泵音和空间感变化。",
+            en: "Speech enhancement cannot remove all noise losslessly; aggressive processing can create metallic artifacts, clipped words, pumping, and spatial changes."
+          },
+          contentDirection: {
+            zh: "适合做通话音频处理流程图，并用噪声、回声、混响三个案例展示算法前后差异。",
+            en: "This can become a call-processing flow diagram with before-after examples for noise, echo, and reverberation."
+          }
+        }
       },
       {
         title: { zh: "空间音频", en: "Spatial Audio" },
@@ -272,7 +624,26 @@ export const categories: Category[] = [
           { zh: "HRTF", en: "HRTF" },
           { zh: "双耳渲染", en: "Binaural rendering" },
           { zh: "头部追踪音频", en: "Head-tracked audio" }
-        ]
+        ],
+        detail: {
+          explanation: {
+            zh: "空间音频通过声源方向、距离、房间反射和头部运动线索，让听众感到声音来自三维空间。耳机中常用双耳渲染和 HRTF，扬声器系统则常结合声道布局、对象音频和房间校正。",
+            en: "Spatial audio uses cues for direction, distance, room reflections, and head movement to make sound feel located in 3D space. Headphones often use binaural rendering and HRTFs, while speaker systems use channel layouts, object audio, and room correction."
+          },
+          keyConcepts: [
+            { zh: "ITD 和 ILD 分别描述左右耳到达时间差和声级差。", en: "ITD and ILD describe interaural time and level differences." },
+            { zh: "HRTF 记录头部、耳廓和躯干对不同方向声音的滤波效果。", en: "HRTFs capture how the head, ears, and torso filter sound from different directions." },
+            { zh: "头部追踪需要低延迟更新声场，否则空间位置会漂移或眩晕。", en: "Head tracking requires low-latency scene updates, otherwise the image can drift or feel uncomfortable." }
+          ],
+          misconception: {
+            zh: "简单把左右声道拉宽不等于真正空间音频；真实空间感需要方向、距离、反射和头部运动等线索配合。",
+            en: "Simply widening stereo is not true spatial audio; convincing space needs direction, distance, reflections, and head-motion cues."
+          },
+          contentDirection: {
+            zh: "适合做 HRTF 示意、头部转动时声源保持不动的交互演示，以及游戏、影院、耳机的案例对比。",
+            en: "This fits an HRTF explainer, an interactive head-rotation demo where the source stays fixed, and comparisons across games, cinema, and headphones."
+          }
+        }
       }
     ]
   },
@@ -296,7 +667,26 @@ export const categories: Category[] = [
           { zh: "语音转文字流程", en: "Speech-to-text pipeline" },
           { zh: "端到端与流式识别", en: "End-to-end and streaming recognition" },
           { zh: "唤醒词与多语言", en: "Wake words and multilingual ASR" }
-        ]
+        ],
+        detail: {
+          explanation: {
+            zh: "语音识别把连续的语音波形转换成可编辑、可检索的文字。典型系统会先做特征提取或神经网络编码，再结合声学、语言和上下文信息，输出分词、标点和时间戳等结果。",
+            en: "Speech recognition turns continuous speech waveforms into editable, searchable text. A typical system extracts features or neural encodings, combines acoustic, language, and contextual information, then outputs words, punctuation, and timestamps."
+          },
+          keyConcepts: [
+            { zh: "离线 ASR 可利用更完整上下文，流式 ASR 更重视低延迟和增量输出。", en: "Offline ASR can use fuller context, while streaming ASR prioritizes low latency and incremental output." },
+            { zh: "WER、CER、实时率和首字延迟是评估识别系统的重要指标。", en: "WER, CER, real-time factor, and first-token latency are key ASR evaluation metrics." },
+            { zh: "唤醒词、端点检测、标点恢复和说话人分离常与 ASR 组成完整语音入口。", en: "Wake words, endpointing, punctuation restoration, and speaker diarization often combine with ASR to form a complete voice interface." }
+          ],
+          misconception: {
+            zh: "识别率高不等于在所有噪声、口音和设备上都稳定；真实产品还要验证远场、多人、打断、专有名词和隐私边界。",
+            en: "High recognition accuracy does not mean stable behavior across all noise, accents, and devices; real products must also validate far-field use, multiple speakers, interruptions, proper nouns, and privacy boundaries."
+          },
+          contentDirection: {
+            zh: "适合扩展为从波形到文字的流程图，并加入流式字幕、会议纪要和车载语音三个应用案例。",
+            en: "This can become a waveform-to-text pipeline diagram with examples for live captions, meeting notes, and in-car voice control."
+          }
+        }
       },
       {
         title: { zh: "语音合成 TTS", en: "Text-to-Speech TTS" },
@@ -308,7 +698,26 @@ export const categories: Category[] = [
           { zh: "声学模型与声码器", en: "Acoustic models and vocoders" },
           { zh: "多音色、情感语音", en: "Multi-speaker and expressive speech" },
           { zh: "实时 TTS 与高保真 TTS", en: "Real-time and high-fidelity TTS" }
-        ]
+        ],
+        detail: {
+          explanation: {
+            zh: "语音合成把文本转换成自然语音。现代 TTS 通常先处理文本、读音和韵律，再由声学模型生成声学表示，最后通过声码器输出波形，可用于导航、客服、播客、配音和无障碍阅读。",
+            en: "Text-to-speech converts text into natural speech. Modern TTS usually normalizes text, predicts pronunciation and prosody, generates acoustic representations, and uses a vocoder to output waveforms for navigation, support, podcasts, dubbing, and accessibility."
+          },
+          keyConcepts: [
+            { zh: "文本规范化负责把数字、日期、单位和缩写转换成可朗读形式。", en: "Text normalization converts numbers, dates, units, and abbreviations into speakable forms." },
+            { zh: "韵律包含停顿、重音、语速和语调，决定语音是否自然。", en: "Prosody includes pauses, stress, speed, and intonation, which strongly shape naturalness." },
+            { zh: "声码器把声学特征转换成最终波形，影响音质、速度和设备成本。", en: "The vocoder converts acoustic features into the final waveform and affects quality, speed, and device cost." }
+          ],
+          misconception: {
+            zh: "音色像真人不代表表达自然；断句、重音、情绪、上下文理解和长文本稳定性同样决定体验。",
+            en: "A realistic voice timbre does not guarantee natural expression; phrasing, stress, emotion, context, and long-form stability also define the experience."
+          },
+          contentDirection: {
+            zh: "适合做文本到波形的模块图，并用同一句话的不同语速、情绪和停顿展示韵律作用。",
+            en: "This fits a text-to-waveform module diagram and examples showing how speed, emotion, and pauses change the same sentence."
+          }
+        }
       },
       {
         title: { zh: "音频生成", en: "Audio Generation" },
@@ -320,7 +729,26 @@ export const categories: Category[] = [
           { zh: "音乐与音效生成", en: "Music and sound generation" },
           { zh: "声音克隆", en: "Voice cloning" },
           { zh: "隐私、版权与安全边界", en: "Privacy, copyright, and safety boundaries" }
-        ]
+        ],
+        detail: {
+          explanation: {
+            zh: "音频生成使用 AI 根据文本、旋律、参考声音或视频画面生成新的音乐、音效、人声或环境声。它能提升内容生产效率，但也需要处理可控性、版权、身份冒用和质量一致性问题。",
+            en: "Audio generation uses AI to create music, sound effects, voices, or ambience from text, melody, reference audio, or video. It can speed up content creation, but it also raises control, copyright, impersonation, and consistency challenges."
+          },
+          keyConcepts: [
+            { zh: "条件控制决定生成结果如何响应文本、风格、节奏、旋律或参考音色。", en: "Conditioning determines how generation responds to text, style, rhythm, melody, or reference timbre." },
+            { zh: "扩散、Transformer、神经声码器等方法常用于不同粒度的音频生成。", en: "Diffusion models, Transformers, neural vocoders, and related methods are used at different audio granularities." },
+            { zh: "水印、授权数据和滥用检测是生成式音频产品的重要安全环节。", en: "Watermarking, licensed data, and abuse detection are important safety layers for generative audio products." }
+          ],
+          misconception: {
+            zh: "AI 生成内容不天然等于可商用或可控；训练数据来源、相似性、声音授权和平台规则都需要确认。",
+            en: "AI-generated audio is not automatically commercial-safe or controllable; training data, similarity, voice consent, and platform rules must be checked."
+          },
+          contentDirection: {
+            zh: "适合做生成式音频应用地图，分别讲音乐、音效、声音克隆、修复和自动配乐的边界。",
+            en: "This can become a generative-audio application map covering music, sound effects, voice cloning, restoration, and automatic scoring."
+          }
+        }
       }
     ]
   },
@@ -344,7 +772,26 @@ export const categories: Category[] = [
           { zh: "远场拾音", en: "Far-field capture" },
           { zh: "多人语音增强", en: "Multi-speaker enhancement" },
           { zh: "实时字幕与翻译", en: "Live captions and translation" }
-        ]
+        ],
+        detail: {
+          explanation: {
+            zh: "会议与通信音频要在网络、设备和环境都不稳定的情况下保持清晰、同步和低延迟。完整链路通常包含采集、回声消除、降噪、编码、传输、解码、播放、字幕和翻译。",
+            en: "Conferencing and communication audio must stay clear, synchronized, and low-latency despite unstable networks, devices, and rooms. The full chain often includes capture, echo cancellation, noise suppression, encoding, transport, decoding, playback, captions, and translation."
+          },
+          keyConcepts: [
+            { zh: "回声消除和双讲处理决定远程会议能否自然打断。", en: "Echo cancellation and double-talk handling determine whether remote meetings support natural interruptions." },
+            { zh: "抖动缓冲和丢包隐藏影响网络波动时的连续性。", en: "Jitter buffers and packet-loss concealment affect continuity under network variation." },
+            { zh: "说话人分离、实时字幕和翻译把音频链路连接到会议生产力。", en: "Diarization, live captions, and translation connect the audio chain to meeting productivity." }
+          ],
+          misconception: {
+            zh: "会议音质不是只靠一个好麦克风；房间、扬声器回放、网络、算法和平台策略都会共同决定体验。",
+            en: "Meeting quality does not come from a good microphone alone; room acoustics, speaker playback, network behavior, algorithms, and platform policy all shape the experience."
+          },
+          contentDirection: {
+            zh: "适合做视频会议端到端链路图，并拆解“回声大、听不清、字幕慢”三个典型问题。",
+            en: "This fits an end-to-end conferencing chain diagram and breakdowns of echo, poor intelligibility, and delayed captions."
+          }
+        }
       },
       {
         title: { zh: "智能汽车", en: "Intelligent Vehicles" },
@@ -356,7 +803,26 @@ export const categories: Category[] = [
           { zh: "车载语音交互", en: "In-car voice interaction" },
           { zh: "声源定位", en: "Sound source localization" },
           { zh: "座舱空间音频", en: "Cabin spatial audio" }
-        ]
+        ],
+        detail: {
+          explanation: {
+            zh: "智能汽车中的音频系统同时服务语音交互、通话、娱乐、提示音和主动降噪。车内空间封闭、噪声随车速变化、乘员位置固定但反射复杂，因此算法和硬件布置需要一起设计。",
+            en: "Vehicle audio systems support voice interaction, calls, entertainment, alerts, and active noise control. Cabins are enclosed, noise changes with speed, occupants have known seats but complex reflections, so algorithms and hardware placement must be designed together."
+          },
+          keyConcepts: [
+            { zh: "多麦克风阵列可用于唤醒、定位、分区拾音和免提通话。", en: "Microphone arrays support wake words, localization, zone pickup, and hands-free calls." },
+            { zh: "主动降噪和路噪控制需要低延迟传感、建模和扬声器补偿。", en: "Active noise and road-noise control need low-latency sensing, modeling, and speaker compensation." },
+            { zh: "座舱空间音频要考虑座位差异、声场校准和安全提示优先级。", en: "Cabin spatial audio must consider seat differences, field calibration, and safety alert priority." }
+          ],
+          misconception: {
+            zh: "车内更安静不代表语音更容易；空调、路噪、音乐、乘客说话和车窗状态都会让场景快速变化。",
+            en: "A quieter cabin does not automatically make speech easier; HVAC, road noise, music, passengers, and window state can change the scene quickly."
+          },
+          contentDirection: {
+            zh: "适合做座舱音频拓扑图，展示麦克风、扬声器、座位和算法模块之间的关系。",
+            en: "This can become a cabin audio topology showing microphones, speakers, seats, and algorithm modules."
+          }
+        }
       },
       {
         title: { zh: "IoT 与内容创作", en: "IoT and Content Creation" },
@@ -368,7 +834,26 @@ export const categories: Category[] = [
           { zh: "本地语音控制", en: "Local voice control" },
           { zh: "播客与直播音频", en: "Podcast and live-stream audio" },
           { zh: "AI 配音与自动母带", en: "AI dubbing and automatic mastering" }
-        ]
+        ],
+        detail: {
+          explanation: {
+            zh: "IoT 音频强调低功耗、低成本、隐私和边缘响应，内容创作音频强调效率、可编辑性和一致交付。两者都在使用语音唤醒、降噪、自动混音、AI 配音和云端协作来降低使用门槛。",
+            en: "IoT audio emphasizes low power, low cost, privacy, and edge responsiveness, while content-creation audio emphasizes efficiency, editability, and consistent delivery. Both use wake words, noise reduction, automatic mixing, AI dubbing, and cloud collaboration to lower the barrier."
+          },
+          keyConcepts: [
+            { zh: "边缘语音唤醒需要在功耗、误唤醒、漏唤醒和模型大小之间取舍。", en: "Edge wake-word detection trades power, false accepts, false rejects, and model size." },
+            { zh: "播客和直播常用响度标准、降噪、压缩、限幅和自动电平控制。", en: "Podcasts and live streams often use loudness targets, noise reduction, compression, limiting, and automatic leveling." },
+            { zh: "AI 配音和自动母带把复杂后期流程变成可重复的工具链。", en: "AI dubbing and automatic mastering turn complex post-production into repeatable toolchains." }
+          ],
+          misconception: {
+            zh: "边缘 AI 不代表完全不需要云端；很多产品会把本地唤醒、轻量命令和云端大模型能力组合使用。",
+            en: "Edge AI does not mean the cloud disappears; many products combine local wake words and lightweight commands with larger cloud models."
+          },
+          contentDirection: {
+            zh: "适合做 IoT 语音链路和创作者音频工具链两条路径，对比实时控制与内容生产的不同目标。",
+            en: "This fits two paths: an IoT voice pipeline and a creator audio toolchain, comparing real-time control with content production goals."
+          }
+        }
       }
     ]
   }

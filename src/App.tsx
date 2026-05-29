@@ -1,9 +1,11 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CategoryTabs } from "./components/CategoryTabs";
+import { DigitalAudioLab } from "./components/DigitalAudioLab";
 import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
 import { Roadmap } from "./components/Roadmap";
 import { SearchBar } from "./components/SearchBar";
+import { SoundWaveLab } from "./components/SoundWaveLab";
 import { TopicDetails } from "./components/TopicDetails";
 import { TopicGrid } from "./components/TopicGrid";
 import {
@@ -33,7 +35,38 @@ function topicMatchesSearch(topic: DisplayTopic, query: string): boolean {
     topic.title.en,
     topic.summary.zh,
     topic.summary.en,
-    ...topic.bullets.flatMap((bullet) => [bullet.zh, bullet.en])
+    topic.detail.explanation.zh,
+    topic.detail.explanation.en,
+    topic.detail.misconception.zh,
+    topic.detail.misconception.en,
+    topic.detail.contentDirection.zh,
+    topic.detail.contentDirection.en,
+    ...topic.bullets.flatMap((bullet) => [bullet.zh, bullet.en]),
+    ...topic.detail.keyConcepts.flatMap((concept) => [concept.zh, concept.en]),
+    ...(topic.detail.termExplanations?.flatMap((term) => [
+      term.name.zh,
+      term.name.en,
+      term.explanation.zh,
+      term.explanation.en
+    ]) ?? []),
+    ...(topic.detail.diagram
+      ? [
+          topic.detail.diagram.label.zh,
+          topic.detail.diagram.label.en,
+          topic.detail.diagram.caption.zh,
+          topic.detail.diagram.caption.en
+        ]
+      : []),
+    ...(topic.detail.lab
+      ? [
+          topic.detail.lab.title.zh,
+          topic.detail.lab.title.en,
+          topic.detail.lab.description.zh,
+          topic.detail.lab.description.en,
+          topic.detail.lab.buttonLabel.zh,
+          topic.detail.lab.buttonLabel.en
+        ]
+      : [])
   ]
     .join(" ")
     .toLowerCase();
@@ -44,6 +77,7 @@ function topicMatchesSearch(topic: DisplayTopic, query: string): boolean {
 export default function App() {
   const [language, setLanguage] = useState<Language>("zh");
   const [activeCategory, setActiveCategory] = useState("all");
+  const [activeView, setActiveView] = useState<"knowledge" | "soundLab" | "digitalLab">("knowledge");
   const [query, setQuery] = useState("");
   const [selectedTopic, setSelectedTopic] = useState<DisplayTopic | null>(null);
 
@@ -71,6 +105,62 @@ export default function App() {
     ? `${selectedTopic.category.id}-${selectedTopic.title.en}`
     : undefined;
 
+  useEffect(() => {
+    if (!selectedTopic) {
+      return undefined;
+    }
+
+    function closeOnEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setSelectedTopic(null);
+      }
+    }
+
+    document.body.classList.add("details-open");
+    window.addEventListener("keydown", closeOnEscape);
+
+    return () => {
+      document.body.classList.remove("details-open");
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [selectedTopic]);
+
+  if (activeView === "soundLab") {
+    return (
+      <div className="app-shell">
+        <Header
+          language={language}
+          onToggleLanguage={() => setLanguage((current) => (current === "zh" ? "en" : "zh"))}
+        />
+        <SoundWaveLab language={language} onBack={() => setActiveView("knowledge")} />
+        <footer className="site-footer">
+          <span>{interfaceCopy.footer[language]}</span>
+          <a href="docs/audio_technology_knowledge_outline.md">
+            {language === "zh" ? "查看 Markdown 大纲" : "Open Markdown outline"}
+          </a>
+        </footer>
+      </div>
+    );
+  }
+
+  if (activeView === "digitalLab") {
+    return (
+      <div className="app-shell">
+        <Header
+          language={language}
+          onToggleLanguage={() => setLanguage((current) => (current === "zh" ? "en" : "zh"))}
+        />
+        <DigitalAudioLab language={language} onBack={() => setActiveView("knowledge")} />
+        <footer className="site-footer">
+          <span>{interfaceCopy.footer[language]}</span>
+          <a href="docs/audio_technology_knowledge_outline.md">
+            {language === "zh" ? "查看 Markdown 大纲" : "Open Markdown outline"}
+          </a>
+        </footer>
+      </div>
+    );
+  }
+
   return (
     <div className="app-shell">
       <Header
@@ -97,6 +187,14 @@ export default function App() {
             <TopicDetails
               language={language}
               onClose={() => setSelectedTopic(null)}
+              onOpenSoundLab={() => {
+                setSelectedTopic(null);
+                setActiveView("soundLab");
+              }}
+              onOpenDigitalLab={() => {
+                setSelectedTopic(null);
+                setActiveView("digitalLab");
+              }}
               topic={selectedTopic}
             />
           ) : null}

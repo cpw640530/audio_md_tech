@@ -524,6 +524,28 @@ main {
   justify-content: center;
 }
 
+body.details-open {
+  overflow: hidden;
+}
+
+.topic-details-layer {
+  align-items: center;
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  padding: clamp(14px, 3vw, 34px);
+  position: fixed;
+  z-index: 80;
+}
+
+.topic-details-backdrop {
+  background: rgba(12, 18, 17, 0.68);
+  border: 0;
+  cursor: pointer;
+  inset: 0;
+  position: absolute;
+}
+
 .topic-details {
   background: #17211f;
   border: 1px solid rgba(255, 255, 255, 0.14);
@@ -536,11 +558,28 @@ main {
   padding: clamp(20px, 3vw, 30px);
 }
 
+.topic-details-modal {
+  max-height: min(86vh, 920px);
+  max-width: 1040px;
+  overflow: hidden;
+  position: relative;
+  width: min(100%, 1040px);
+  z-index: 1;
+}
+
 .details-header {
   align-items: flex-start;
   display: flex;
   gap: 18px;
   justify-content: space-between;
+}
+
+.details-scroll {
+  display: grid;
+  gap: 18px;
+  max-height: calc(min(86vh, 920px) - 128px);
+  overflow: auto;
+  padding-right: 4px;
 }
 
 .details-category {
@@ -584,10 +623,21 @@ main {
   padding: 16px;
 }
 
+.details-block-emphasis {
+  background: color-mix(in srgb, var(--accent, #1f9d8a) 18%, rgba(255, 255, 255, 0.06));
+  border-color: color-mix(in srgb, var(--accent, #1f9d8a) 36%, rgba(255, 255, 255, 0.12));
+}
+
 .details-block h3 {
   color: #ffffff;
   font-size: 1rem;
   margin: 0 0 10px;
+}
+
+.details-block h4 {
+  color: #ffffff;
+  font-size: 0.96rem;
+  margin: 0 0 8px;
 }
 
 .details-block ul {
@@ -598,6 +648,706 @@ main {
 
 .details-block li + li {
   margin-top: 6px;
+}
+
+.details-diagram-block {
+  overflow: visible;
+}
+
+.term-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.term-card {
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.sound-wave-diagram {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+}
+
+.sine-lab {
+  align-items: flex-start;
+  display: flex;
+  gap: 14px;
+  justify-content: space-between;
+}
+
+.sine-lab-copy {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.sine-lab-copy strong {
+  color: #ffffff;
+}
+
+.sine-lab-copy code {
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #dff9f5;
+  display: block;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: clamp(0.76rem, 1.5vw, 0.96rem);
+  overflow-wrap: anywhere;
+  padding: 10px 12px;
+}
+
+.sine-controls {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.sine-button {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-flex;
+  gap: 6px;
+  min-height: 38px;
+  padding: 0 12px;
+}
+
+.sine-status {
+  color: #adc5bf;
+  font-size: 0.88rem;
+  font-weight: 720;
+}
+
+.sine-status.playing {
+  color: #7ee7d8;
+}
+
+.sine-sliders {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.sine-sliders label {
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 8px;
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+}
+
+.sine-sliders label span {
+  align-items: center;
+  color: #dbe8e4;
+  display: flex;
+  font-size: 0.9rem;
+  justify-content: space-between;
+}
+
+.sine-sliders label strong {
+  color: #ffffff;
+  font-size: 0.86rem;
+}
+
+.sine-sliders input[type="range"] {
+  accent-color: var(--accent, #1f9d8a);
+  width: 100%;
+}
+
+.sound-wave-diagram svg {
+  display: block;
+  height: auto;
+  max-width: 100%;
+  overflow: visible;
+}
+
+.sound-wave-diagram figcaption {
+  color: #c9d8d4;
+  font-size: 0.92rem;
+  margin-top: 10px;
+}
+
+.diagram-bg {
+  fill: rgba(255, 255, 255, 0.055);
+}
+
+.diagram-axis,
+.diagram-measure {
+  stroke: rgba(220, 236, 232, 0.42);
+  stroke-width: 2;
+}
+
+.diagram-axis.faint {
+  opacity: 0.36;
+  stroke-dasharray: 8 8;
+}
+
+.diagram-wave {
+  fill: none;
+  stroke-linecap: round;
+  stroke-width: 4;
+}
+
+.diagram-wave-high {
+  stroke: url("#waveLine");
+}
+
+.diagram-wave-low {
+  opacity: 0.84;
+  stroke: #8fb7ff;
+}
+
+.diagram-arrow {
+  stroke: #dcece8;
+  stroke-width: 2;
+}
+
+.diagram-label {
+  fill: #dbe8e4;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.diagram-chip {
+  fill: #ffffff;
+  font-size: 18px;
+  font-weight: 780;
+}
+
+.sound-lab-entry {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  padding: 14px;
+}
+
+.sound-lab-entry strong {
+  color: #ffffff;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.sound-lab-entry p {
+  color: #c9d8d4;
+  margin: 0;
+}
+
+.diagram-open-button {
+  align-items: center;
+  background: color-mix(in srgb, var(--accent, #1f9d8a) 26%, rgba(255, 255, 255, 0.08));
+  border: 1px solid color-mix(in srgb, var(--accent, #1f9d8a) 42%, rgba(255, 255, 255, 0.14));
+  border-radius: 8px;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-flex;
+  font-weight: 780;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 14px;
+  white-space: nowrap;
+}
+
+.sound-lab-page {
+  display: grid;
+  gap: 24px;
+  margin: 0 auto;
+  max-width: 1180px;
+  padding: 34px clamp(18px, 4vw, 56px) 42px;
+  width: 100%;
+}
+
+.sound-lab-hero {
+  align-items: start;
+  display: grid;
+  gap: 18px;
+  grid-template-columns: auto minmax(0, 1fr);
+}
+
+.sound-lab-hero h1 {
+  color: #17211f;
+  font-size: clamp(2rem, 4vw, 3.6rem);
+  letter-spacing: 0;
+  line-height: 1;
+  margin: 6px 0 12px;
+}
+
+.sound-lab-hero p {
+  color: #4f5d59;
+  font-size: 1.05rem;
+  margin: 0;
+  max-width: 720px;
+}
+
+.sound-lab-back {
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid rgba(23, 33, 31, 0.12);
+  border-radius: 8px;
+  color: #17211f;
+  cursor: pointer;
+  display: inline-flex;
+  font-weight: 780;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 14px;
+}
+
+.sound-lab-workbench {
+  align-items: stretch;
+  background: #17211f;
+  border: 1px solid rgba(23, 33, 31, 0.12);
+  border-radius: 8px;
+  box-shadow: 0 18px 54px rgba(23, 33, 31, 0.16);
+  display: grid;
+  gap: 18px;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+  padding: clamp(16px, 3vw, 26px);
+}
+
+.sound-lab-visual {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+.sound-lab-formula {
+  align-items: center;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: auto minmax(0, 1fr);
+}
+
+.sound-lab-formula strong {
+  color: #ffffff;
+}
+
+.sound-lab-formula code {
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #dff9f5;
+  display: block;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: clamp(0.82rem, 1.5vw, 1rem);
+  overflow-wrap: anywhere;
+  padding: 10px 12px;
+}
+
+.sound-lab-visual svg {
+  display: block;
+  height: auto;
+  max-width: 100%;
+}
+
+.lab-diagram-bg {
+  fill: rgba(255, 255, 255, 0.055);
+}
+
+.lab-axis,
+.lab-measure {
+  stroke: rgba(220, 236, 232, 0.42);
+  stroke-width: 2;
+}
+
+.lab-axis.faint {
+  opacity: 0.42;
+  stroke-dasharray: 8 8;
+}
+
+.lab-wave-path {
+  fill: none;
+  stroke: url("#labWaveLine");
+  stroke-linecap: round;
+  stroke-width: 5;
+}
+
+.lab-label {
+  fill: #dbe8e4;
+  font-size: 18px;
+  font-weight: 740;
+}
+
+.lab-chip {
+  fill: #ffffff;
+  font-size: 20px;
+  font-weight: 780;
+}
+
+.sound-lab-panel {
+  align-content: start;
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+}
+
+.waveform-tabs {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.waveform-tab {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  color: #dbe8e4;
+  cursor: pointer;
+  font-weight: 760;
+  min-height: 40px;
+}
+
+.waveform-tab.active {
+  background: rgba(126, 231, 216, 0.18);
+  border-color: rgba(126, 231, 216, 0.42);
+  color: #ffffff;
+}
+
+.sound-lab-actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.lab-sliders {
+  display: grid;
+  gap: 12px;
+}
+
+.lab-sliders label {
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 8px;
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+}
+
+.lab-sliders span {
+  align-items: center;
+  color: #dbe8e4;
+  display: flex;
+  font-size: 0.9rem;
+  justify-content: space-between;
+}
+
+.lab-sliders strong {
+  color: #ffffff;
+  font-size: 0.86rem;
+}
+
+.lab-sliders input[type="range"] {
+  accent-color: #7ee7d8;
+  width: 100%;
+}
+
+.lab-live-note {
+  background: rgba(126, 231, 216, 0.09);
+  border: 1px solid rgba(126, 231, 216, 0.18);
+  border-radius: 8px;
+  color: #dbe8e4;
+  line-height: 1.7;
+  padding: 12px;
+}
+
+.lab-concepts {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.lab-concepts article {
+  background: #ffffff;
+  border: 1px solid rgba(23, 33, 31, 0.1);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.lab-concepts h2 {
+  color: #17211f;
+  font-size: 1.05rem;
+  margin: 0 0 8px;
+}
+
+.lab-concepts p {
+  color: #4f5d59;
+  margin: 0;
+}
+
+.details-lab-block {
+  background: color-mix(in srgb, var(--accent, #1f9d8a) 14%, rgba(255, 255, 255, 0.06));
+}
+
+.digital-lab-page {
+  display: grid;
+  gap: 24px;
+  margin: 0 auto;
+  max-width: 1180px;
+  padding: 34px clamp(18px, 4vw, 56px) 42px;
+  width: 100%;
+}
+
+.digital-lab-workbench {
+  align-items: stretch;
+  background: #17211f;
+  border: 1px solid rgba(23, 33, 31, 0.12);
+  border-radius: 8px;
+  box-shadow: 0 18px 54px rgba(23, 33, 31, 0.16);
+  display: grid;
+  gap: 18px;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+  padding: clamp(16px, 3vw, 26px);
+}
+
+.digital-lab-visual {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+.digital-lab-status {
+  align-items: center;
+  color: #c9d8d4;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.digital-lab-status strong {
+  color: #ffffff;
+}
+
+.digital-lab-visual svg {
+  display: block;
+  height: auto;
+  max-width: 100%;
+}
+
+.digital-analog-path {
+  fill: none;
+  stroke: url("#digitalAnalogLine");
+  stroke-linecap: round;
+  stroke-width: 4;
+}
+
+.digital-step-path {
+  fill: none;
+  stroke: #f0b46a;
+  stroke-linejoin: round;
+  stroke-width: 4;
+}
+
+.digital-error-path {
+  fill: none;
+  stroke: #ff8fa3;
+  stroke-linecap: round;
+  stroke-width: 3;
+}
+
+.digital-sample-stem {
+  stroke: rgba(220, 236, 232, 0.28);
+  stroke-width: 1.5;
+}
+
+.digital-sample-dot {
+  fill: #7ee7d8;
+}
+
+.digital-quantized-dot {
+  fill: #f0b46a;
+}
+
+.digital-lab-panel {
+  align-content: start;
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+}
+
+.digital-lab-metrics {
+  display: grid;
+  gap: 8px;
+}
+
+.digital-lab-metrics strong {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #ffffff;
+  padding: 10px 12px;
+}
+
+.pcm-encoding-section {
+  display: grid;
+  gap: 16px;
+}
+
+.pcm-flow {
+  background: #17211f;
+  border-radius: 8px;
+  color: #dff9f5;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  margin: 0;
+  overflow-wrap: anywhere;
+  padding: 14px 16px;
+}
+
+.pcm-word-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.pcm-word-card {
+  background: #ffffff;
+  border: 1px solid rgba(23, 33, 31, 0.1);
+  border-radius: 8px;
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+}
+
+.pcm-word-card strong {
+  color: #17211f;
+}
+
+.pcm-word-card span {
+  color: #4f5d59;
+  font-size: 0.9rem;
+}
+
+.pcm-word-card code {
+  background: #17211f;
+  border-radius: 8px;
+  color: #7ee7d8;
+  display: block;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  overflow-wrap: anywhere;
+  padding: 10px;
+}
+
+.pcm-formula-card {
+  background: color-mix(in srgb, #1f9d8a 12%, #ffffff);
+  border: 1px solid rgba(31, 157, 138, 0.18);
+  border-radius: 8px;
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+}
+
+.pcm-formula-card strong {
+  color: #17211f;
+  font-size: 1.04rem;
+}
+
+.pcm-formula-card span {
+  color: #1f7569;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-weight: 780;
+}
+
+.pcm-formula-card p {
+  color: #4f5d59;
+  margin: 0;
+}
+
+.wav-container-section {
+  display: grid;
+  gap: 14px;
+}
+
+.wav-container-card {
+  align-items: stretch;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+}
+
+.wav-header-box,
+.wav-data-box {
+  background: #17211f;
+  border-radius: 8px;
+  color: #dbe8e4;
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+}
+
+.wav-header-box strong,
+.wav-data-box strong {
+  color: #ffffff;
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+.wav-plus {
+  align-items: center;
+  color: #1f7569;
+  display: flex;
+  font-size: 1.4rem;
+  font-weight: 820;
+}
+
+.codec-table-section {
+  display: grid;
+  gap: 16px;
+}
+
+.codec-table {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.codec-table article {
+  background: #ffffff;
+  border: 1px solid rgba(23, 33, 31, 0.1);
+  border-radius: 8px;
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+}
+
+.codec-table h3 {
+  color: #17211f;
+  margin: 0;
+}
+
+.codec-table p {
+  color: #4f5d59;
+  margin: 0;
+}
+
+.codec-table strong {
+  color: #1f7569;
+  font-size: 0.9rem;
+}
+
+.codec-note {
+  color: #4f5d59;
+  margin: 0;
 }
 
 .details-formats {
@@ -699,6 +1449,61 @@ main {
   .signal-panel {
     min-height: auto;
   }
+
+  .topic-details-layer {
+    align-items: stretch;
+  }
+
+  .topic-details-modal {
+    max-height: calc(100vh - 28px);
+  }
+
+  .details-scroll {
+    max-height: calc(100vh - 156px);
+  }
+
+  .sine-lab {
+    display: grid;
+  }
+
+  .sine-controls {
+    justify-content: flex-start;
+  }
+
+  .sine-sliders {
+    grid-template-columns: 1fr;
+  }
+
+  .sound-lab-entry,
+  .sound-lab-hero,
+  .sound-lab-workbench,
+  .digital-lab-workbench {
+    grid-template-columns: 1fr;
+  }
+
+  .sound-lab-formula {
+    grid-template-columns: 1fr;
+  }
+
+  .lab-concepts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .codec-table {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pcm-word-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .wav-container-card {
+    grid-template-columns: 1fr;
+  }
+
+  .wav-plus {
+    justify-content: center;
+  }
 }
 
 @media (max-width: 620px) {
@@ -724,6 +1529,23 @@ main {
 
   .section-heading {
     flex-direction: column;
+  }
+
+  .sound-lab-page,
+  .digital-lab-page {
+    padding-inline: 16px;
+  }
+
+  .waveform-tabs,
+  .lab-concepts,
+  .codec-table,
+  .pcm-word-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .diagram-open-button,
+  .sound-lab-back {
+    width: 100%;
   }
 }
 
