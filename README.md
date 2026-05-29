@@ -12,6 +12,7 @@
 
 <p align="center">
   <img alt="Docs" src="https://img.shields.io/badge/docs-Markdown-blue">
+  <img alt="App" src="https://img.shields.io/badge/app-React%20%2B%20Vite-1f9d8a">
   <img alt="Language" src="https://img.shields.io/badge/language-English%20%7C%20Chinese-brightgreen">
   <img alt="Knowledge Base" src="https://img.shields.io/badge/type-Audio%20Knowledge%20Base-purple">
   <img alt="Status" src="https://img.shields.io/badge/status-planning-orange">
@@ -23,7 +24,7 @@
 
 Audio Technology Knowledge Base is a content-first repository for organizing audio technology concepts before turning them into web pages, diagrams, articles, and interactive learning experiences.
 
-The current focus is to build a clear knowledge map covering audio fundamentals, hardware, software, signal processing, AI audio algorithms, and real-world applications.
+The current focus is to build a clear knowledge map covering audio fundamentals, hardware, software, signal processing, AI audio algorithms, and real-world applications. A React/Vite web app is included to browse, search, and filter the structured knowledge content.
 
 ## Why This Repository Exists
 
@@ -56,6 +57,26 @@ Start from the main knowledge outline:
 
 The outline is the source document for future content expansion. Each section can later become a website category, article series, diagram page, or interactive explanation.
 
+To run the web app locally:
+
+```bash
+npm install
+npm run dev
+```
+
+The default local URL is:
+
+```text
+http://127.0.0.1:5173/audio_md_tech/
+```
+
+Useful commands:
+
+```bash
+npm test
+npm run build
+```
+
 ## Content Structure
 
 ```text
@@ -63,6 +84,13 @@ The outline is the source document for future content expansion. Each section ca
 ├── README.md
 ├── READMEs/
 │   └── README.zh-CN.md
+├── index.html
+├── package.json
+├── src/
+│   ├── App.tsx
+│   ├── components/
+│   ├── content/
+│   └── styles.css
 └── docs/
     └── audio_technology_knowledge_outline.md
 ```
@@ -81,6 +109,7 @@ The current outline is intended to evolve into these web content modules:
 
 - [x] Create the first audio technology knowledge outline.
 - [x] Add bilingual README entry points.
+- [x] Build the first React/Vite knowledge-base web app.
 - [ ] Split the outline into website-ready topic pages.
 - [ ] Add diagrams for signal chains, spectrograms, and algorithm flows.
 - [ ] Expand each topic using a consistent article template.

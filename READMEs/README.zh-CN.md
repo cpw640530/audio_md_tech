@@ -12,6 +12,7 @@
 
 <p align="center">
   <img alt="Docs" src="https://img.shields.io/badge/docs-Markdown-blue">
+  <img alt="App" src="https://img.shields.io/badge/app-React%20%2B%20Vite-1f9d8a">
   <img alt="Language" src="https://img.shields.io/badge/language-English%20%7C%20Chinese-brightgreen">
   <img alt="Knowledge Base" src="https://img.shields.io/badge/type-Audio%20Knowledge%20Base-purple">
   <img alt="Status" src="https://img.shields.io/badge/status-planning-orange">
@@ -23,7 +24,7 @@
 
 音频技术科普知识库是一个内容优先的资料仓库，用于在制作网页、图解文章和交互式学习页面之前，先系统整理音频技术相关知识。
 
-当前重点是建立一张清晰的知识地图，覆盖音频基础、硬件、软件、信号处理、AI 音频算法和真实应用场景。
+当前重点是建立一张清晰的知识地图，覆盖音频基础、硬件、软件、信号处理、AI 音频算法和真实应用场景。仓库中也包含一个 React/Vite 网页应用，用于浏览、搜索和筛选结构化后的知识内容。
 
 ## 为什么建立这个仓库
 
@@ -56,6 +57,26 @@
 
 这份大纲是后续内容扩展的源文档。每个章节后续都可以拆成网页栏目、文章系列、图解页面或交互式说明。
 
+本地运行网页应用：
+
+```bash
+npm install
+npm run dev
+```
+
+默认本地访问地址：
+
+```text
+http://127.0.0.1:5173/audio_md_tech/
+```
+
+常用命令：
+
+```bash
+npm test
+npm run build
+```
+
 ## 内容结构
 
 ```text
@@ -63,6 +84,13 @@
 ├── README.md
 ├── READMEs/
 │   └── README.zh-CN.md
+├── index.html
+├── package.json
+├── src/
+│   ├── App.tsx
+│   ├── components/
+│   ├── content/
+│   └── styles.css
 └── docs/
     └── audio_technology_knowledge_outline.md
 ```
@@ -81,6 +109,7 @@
 
 - [x] 创建第一版音频技术知识大纲。
 - [x] 增加双语 README 入口。
+- [x] 搭建第一版 React/Vite 知识库网页应用。
 - [ ] 将大纲拆分为适合网页展示的专题页面。
 - [ ] 增加信号链路、频谱图和算法流程图。
 - [ ] 使用统一文章模板扩展每个主题。
