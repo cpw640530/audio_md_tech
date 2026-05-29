@@ -1,65 +1,109 @@
-# Audio Technology Knowledge Base
+<p align="center">
+  <h1 align="center">Audio Technology Knowledge Base</h1>
+  <p align="center">
+    A structured knowledge base for audio technology education, web content planning, and future interactive learning pages.
+  </p>
+</p>
 
-[中文](#中文) | [English](#english)
+<p align="center">
+  <a href="./README.md">English</a> ·
+  <a href="./READMEs/README.zh-CN.md">简体中文</a>
+</p>
 
-## 中文
-
-# 音频技术科普知识库
-
-这是一个面向后续网页内容建设的音频技术科普知识库。项目会逐步整理音频技术相关的基础概念、硬件链路、软件架构、传统算法、AI 音频算法以及实际应用场景，为后续制作网页栏目、专题文章、图解内容和交互式知识页面做准备。
-
-## 当前内容
-
-- 音频技术基础知识：声音、声学、数字音频、采样率、位深、音频格式等。
-- 音频硬件相关：麦克风、ADC、DAC、Codec、功放、扬声器、耳机和嵌入式音频硬件。
-- 音频软件相关：音频驱动、系统音频架构、音频数据流、编解码和实时音频处理。
-- 传统音频算法：FFT、滤波器、EQ、动态处理、降噪、回声消除、波束成形和空间音频。
-- AI 音频算法：ASR、TTS、AI 降噪、音源分离、声音克隆、音乐生成和音频修复。
-- 应用场景：消费电子、会议通信、智能汽车、IoT、内容创作、医疗和工业声学。
-
-## 文档入口
-
-- [音频技术科普知识大纲](docs/audio_technology_knowledge_outline.md)
-
-## 后续计划
-
-- 将知识大纲拆分为适合网页展示的一级栏目和专题页面。
-- 为重点概念补充图解，例如声波、采样、频谱、音频链路和算法流程。
-- 按“概念解释、关键指标、常见误区、应用案例、延伸阅读”的结构扩展文章内容。
-- 为 AI 音频内容补充数据、隐私、版权、实时性和端侧算力限制等边界说明。
-
-## 语言切换说明
-
-GitHub README 不支持运行 JavaScript，因此本页使用顶部的 Markdown 链接作为语言切换按钮。点击“中文”或“English”即可跳转到对应语言区块。
+<p align="center">
+  <img alt="Docs" src="https://img.shields.io/badge/docs-Markdown-blue">
+  <img alt="Language" src="https://img.shields.io/badge/language-English%20%7C%20Chinese-brightgreen">
+  <img alt="Knowledge Base" src="https://img.shields.io/badge/type-Audio%20Knowledge%20Base-purple">
+  <img alt="Status" src="https://img.shields.io/badge/status-planning-orange">
+</p>
 
 ---
 
-## English
+## Overview
 
-# Audio Technology Knowledge Base
+Audio Technology Knowledge Base is a content-first repository for organizing audio technology concepts before turning them into web pages, diagrams, articles, and interactive learning experiences.
 
-This repository is a knowledge base for audio technology education and future web content production. It organizes foundational audio concepts, hardware signal chains, software architecture, traditional audio algorithms, AI audio algorithms, and real-world applications. The content is intended to support future website sections, topic articles, diagrams, and interactive knowledge pages.
+The current focus is to build a clear knowledge map covering audio fundamentals, hardware, software, signal processing, AI audio algorithms, and real-world applications.
 
-## Current Content
+## Why This Repository Exists
 
-- Audio fundamentals: sound, acoustics, digital audio, sample rate, bit depth, and audio formats.
-- Audio hardware: microphones, ADCs, DACs, codecs, amplifiers, speakers, headphones, and embedded audio hardware.
-- Audio software: audio drivers, system audio architecture, audio data flow, codecs, and real-time audio processing.
-- Traditional audio algorithms: FFT, filters, EQ, dynamic processing, noise suppression, echo cancellation, beamforming, and spatial audio.
-- AI audio algorithms: ASR, TTS, AI noise suppression, source separation, voice cloning, music generation, and audio restoration.
-- Application scenarios: consumer electronics, conferencing, intelligent vehicles, IoT, content creation, medical audio, and industrial acoustics.
+Audio technology spans physics, electronics, embedded systems, operating systems, digital signal processing, machine learning, and product applications. This repository keeps those topics in one structured place so future website content can be planned and expanded consistently.
 
-## Documentation
+It is designed for:
+
+- Preparing educational website content.
+- Building article outlines and topic pages.
+- Planning diagrams for audio signal chains and algorithms.
+- Organizing traditional DSP and AI audio concepts together.
+- Creating a reusable content foundation for future audio technology projects.
+
+## Knowledge Areas
+
+| Area | Topics |
+| --- | --- |
+| Audio fundamentals | Sound, acoustics, sampling, bit depth, audio formats, listening perception |
+| Audio hardware | Microphones, ADC, DAC, codecs, amplifiers, speakers, headphones, embedded audio |
+| Audio software | Drivers, system audio architecture, audio data flow, codecs, real-time processing |
+| Traditional algorithms | FFT, filters, EQ, dynamics, noise suppression, echo cancellation, beamforming |
+| AI audio algorithms | ASR, TTS, AI denoising, source separation, voice cloning, music generation |
+| Applications | Consumer electronics, conferencing, vehicles, IoT, content creation, medical and industrial audio |
+
+## Quick Start
+
+Start from the main knowledge outline:
 
 - [Audio Technology Knowledge Outline](docs/audio_technology_knowledge_outline.md)
 
+The outline is the source document for future content expansion. Each section can later become a website category, article series, diagram page, or interactive explanation.
+
+## Content Structure
+
+```text
+.
+├── README.md
+├── READMEs/
+│   └── README.zh-CN.md
+└── docs/
+    └── audio_technology_knowledge_outline.md
+```
+
+## Website Content Plan
+
+The current outline is intended to evolve into these web content modules:
+
+- **Beginner guides**: sample rate, bit depth, frequency response, audio formats, Bluetooth latency.
+- **Hardware explainers**: microphones, DACs, amplifiers, TWS audio chains, embedded audio systems.
+- **Algorithm visualizations**: FFT, filtering, noise suppression, echo cancellation, beamforming.
+- **AI audio series**: speech recognition, speech synthesis, AI denoising, voice cloning, audio generation.
+- **Application case studies**: conferencing systems, smart speakers, in-car voice interaction, live streaming audio.
+
 ## Roadmap
 
-- Split the knowledge outline into website-ready sections and topic pages.
-- Add diagrams for core concepts such as sound waves, sampling, spectrograms, audio chains, and algorithm flows.
-- Expand articles using a consistent structure: concept explanation, key metrics, common misconceptions, application examples, and further reading.
-- Add boundary notes for AI audio topics, including data, privacy, copyright, real-time constraints, and edge-device compute limits.
+- [x] Create the first audio technology knowledge outline.
+- [x] Add bilingual README entry points.
+- [ ] Split the outline into website-ready topic pages.
+- [ ] Add diagrams for signal chains, spectrograms, and algorithm flows.
+- [ ] Expand each topic using a consistent article template.
+- [ ] Add source references and recommended reading lists.
+- [ ] Prepare a future web interface for browsing the knowledge base.
 
-## Language Switch
+## Writing Principles
 
-GitHub README files do not support JavaScript execution, so this page uses Markdown links at the top as language-switch buttons. Click “中文” or “English” to jump to the corresponding language section.
+- Keep explanations approachable without losing technical accuracy.
+- Use diagrams for signal flow, hardware chains, and algorithm processes.
+- Separate foundational concepts from advanced topics.
+- Explain both traditional DSP and AI-based approaches.
+- Include practical product and engineering context where useful.
+
+## Language
+
+This repository provides separate README files for each language:
+
+- [English](./README.md)
+- [简体中文](./READMEs/README.zh-CN.md)
+
+GitHub README files do not run JavaScript, so language switching is implemented with normal Markdown links.
+
+## License
+
+No license has been selected yet.
