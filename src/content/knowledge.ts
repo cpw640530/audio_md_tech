@@ -24,7 +24,7 @@ export type TopicDiagram = {
 };
 
 export type TopicLab = {
-  type: "sampling-quantization" | "listening-metrics" | "microphone" | "codec-hardware";
+  type: "sampling-quantization" | "listening-metrics" | "microphone" | "codec-hardware" | "digital-interface";
   title: LocalizedText;
   description: LocalizedText;
   buttonLabel: LocalizedText;
@@ -625,6 +625,105 @@ export const categories: Category[] = [
           contentDirection: {
             zh: "适合继续扩展为从麦克风到扬声器的硬件链路图、Codec 寄存器配置示例、I2S/PDM/TDM 时序图，以及噪声、失真、爆音和时钟问题排查清单。",
             en: "This can expand into microphone-to-speaker hardware chain diagrams, codec register examples, I2S/PDM/TDM timing diagrams, and checklists for noise, distortion, pops, and clocking problems."
+          }
+        }
+      },
+      {
+        title: { zh: "数字音频接口 / 传输协议", en: "Digital Audio Interfaces / Transport Protocols" },
+        summary: {
+          zh: "理解主控、Codec、数字麦克风、功放和外设之间如何传输音频样本、时钟和多通道数据。",
+          en: "Understand how hosts, codecs, digital microphones, amplifiers, and peripherals move audio samples, clocks, and multichannel data."
+        },
+        bullets: [
+          { zh: "I2S / IIS / I²S、TDM、PDM、SPDIF、USB Audio", en: "I2S / IIS / I²S, TDM, PDM, SPDIF, USB Audio" },
+          { zh: "MCLK、BCLK、LRCLK、帧同步和主从时钟", en: "MCLK, BCLK, LRCLK, frame sync, and clock master/slave roles" },
+          { zh: "声道排布、位宽、对齐方式、延迟和兼容性", en: "Channel layout, word length, alignment, latency, and compatibility" }
+        ],
+        detail: {
+          explanation: {
+            zh: "接口协议关注的是芯片和设备之间如何搬运音频样本，而不是声音如何被采样或压缩。ADC、DAC、Codec、数字 MEMS 麦克风、DSP、蓝牙芯片和主控之间通常要约定数据线、时钟线、帧同步、位宽、声道顺序和主从关系，任何一项不匹配都可能导致无声、变调、左右声道错位、噪声或爆音。",
+            en: "Interface protocols are about moving audio samples between chips and devices, not about how sound is sampled or compressed. ADCs, DACs, codecs, digital MEMS microphones, DSPs, Bluetooth chips, and hosts must agree on data lines, clocks, frame sync, word length, channel order, and master/slave roles; mismatches can cause silence, pitch errors, swapped channels, noise, or pops."
+          },
+          keyConcepts: [
+            { zh: "I2S/IIS/I²S 主要用于传输已经采样量化后的 PCM 数据，常见于主控和 Codec、DAC、功放之间。", en: "I2S/IIS/I²S carries already sampled and quantized PCM data, commonly between a host and codec, DAC, or amplifier." },
+            { zh: "PDM 常见于数字 MEMS 麦克风，传的是高速 1-bit 脉冲密度流，后端需要抽取滤波变成 PCM。", en: "PDM is common for digital MEMS microphones. It carries a high-rate 1-bit pulse-density stream that must be decimated into PCM." },
+            { zh: "TDM 适合多通道音频，把多个声道按时隙塞进同一条数据线和同一组时钟。", en: "TDM fits multichannel audio by packing channels into time slots on one data line and shared clocks." },
+            { zh: "接口调试要同时检查采样率、位深、左右/帧同步、主从时钟、边沿采样和 DMA buffer 配置。", en: "Interface debugging checks sample rate, bit depth, left/right or frame sync, master/slave clocks, sampling edge, and DMA buffer configuration together." }
+          ],
+          termExplanations: [
+            {
+              name: { zh: "I2S / IIS / I²S", en: "I2S / IIS / I²S" },
+              explanation: {
+                zh: "I2S 是最常见的芯片级数字音频接口之一，也常被写成 IIS 或 I²S。它通常包含 BCLK 位时钟、LRCLK 左右声道时钟和 SD 数据线，可选 MCLK 主时钟。它主要传输 PCM 样本，常用于主控连接 Codec、DAC、ADC、DSP 或数字功放。",
+                en: "I2S is one of the most common chip-level digital audio interfaces, also written as IIS or I²S. It usually has BCLK bit clock, LRCLK left/right clock, SD data, and optionally MCLK master clock. It carries PCM samples between hosts, codecs, DACs, ADCs, DSPs, or digital amplifiers."
+              }
+            },
+            {
+              name: { zh: "TDM", en: "TDM" },
+              explanation: {
+                zh: "TDM 是时分复用接口，可以把 4 路、8 路甚至更多声道按固定时隙放进同一条数据线上。会议设备、多麦阵列、车载音频和多通道 DSP 常用 TDM，但帧长、slot 宽度、声道顺序必须严格匹配。",
+                en: "TDM uses time slots to place 4, 8, or more channels on one data line. It is common in conferencing devices, microphone arrays, automotive audio, and multichannel DSP systems, but frame length, slot width, and channel order must match exactly."
+              }
+            },
+            {
+              name: { zh: "PDM", en: "PDM" },
+              explanation: {
+                zh: "PDM 是脉冲密度调制，常见于数字 MEMS 麦克风。它不是普通多 bit PCM，而是高速 1-bit 数据流，密度代表瞬时幅度。主控或 Codec 需要用抽取滤波把 PDM 转换成 PCM 后再处理。",
+                en: "PDM means pulse-density modulation and is common in digital MEMS microphones. It is not normal multibit PCM; it is a high-rate 1-bit stream where pulse density represents amplitude. A host or codec decimates it into PCM before processing."
+              }
+            },
+            {
+              name: { zh: "PCM 接口", en: "PCM interface" },
+              explanation: {
+                zh: "PCM 接口这个名字在不同芯片手册中含义不完全一致，有时指电话/语音窄带接口，有时泛指同步串行 PCM 传输。看数据手册时要确认帧同步、位宽、对齐方式和是否兼容 I2S/TDM。",
+                en: "The term PCM interface varies by datasheet. It can mean a telephony voice interface or a generic synchronous serial PCM transport. Check frame sync, word length, alignment, and whether it is compatible with I2S or TDM."
+              }
+            },
+            {
+              name: { zh: "SPDIF", en: "SPDIF" },
+              explanation: {
+                zh: "SPDIF 常用于消费电子的数字音频输出，可通过同轴或光纤传输立体声 PCM，也可承载压缩环绕声码流。它适合设备间连接，不常用于芯片内部短距离连接。",
+                en: "SPDIF is common in consumer digital audio output over coaxial or optical links. It can carry stereo PCM or compressed surround bitstreams. It is useful between devices rather than short chip-to-chip links."
+              }
+            },
+            {
+              name: { zh: "USB Audio", en: "USB Audio" },
+              explanation: {
+                zh: "USB Audio 是电脑、手机和声卡之间常见的外设级音频协议。它不仅传音频样本，还包含设备枚举、端点、同步方式、控制请求、采样率切换和多通道描述。",
+                en: "USB Audio is a peripheral-level protocol between computers, phones, and audio interfaces. It carries samples and also handles enumeration, endpoints, synchronization, control requests, sample-rate changes, and multichannel descriptors."
+              }
+            },
+            {
+              name: { zh: "MCLK / BCLK / LRCLK", en: "MCLK / BCLK / LRCLK" },
+              explanation: {
+                zh: "MCLK 是主时钟，BCLK 是每一位数据的时钟，LRCLK 或 FS 用来标记左右声道或帧边界。采样率、位宽和声道数会共同决定这些时钟频率。",
+                en: "MCLK is the master clock, BCLK clocks each data bit, and LRCLK or FS marks left/right channels or frame boundaries. Sample rate, word length, and channel count together determine these clock rates."
+              }
+            },
+            {
+              name: { zh: "主从时钟", en: "Clock master/slave" },
+              explanation: {
+                zh: "数字音频链路中必须明确谁输出时钟、谁跟随时钟。两个设备都当主机会打架，两个设备都当从机则没有时钟。复杂系统通常还要统一 PLL 和采样率域。",
+                en: "A digital audio link must define who generates clocks and who follows them. Two masters conflict, while two slaves provide no clock. Complex systems also need aligned PLL and sample-rate domains."
+              }
+            }
+          ],
+          lab: {
+            type: "digital-interface",
+            title: { zh: "数字音频接口实验室", en: "Digital Audio Interface Lab" },
+            description: {
+              zh: "进入独立界面切换 I2S、TDM、PDM、SPDIF 和 USB Audio，观察时钟线、数据线、帧同步、声道 slot、PDM 抽取和 USB 包传输。",
+              en: "Open an independent lab to switch I2S, TDM, PDM, SPDIF, and USB Audio while inspecting clock lines, data lines, frame sync, channel slots, PDM decimation, and USB packet transport."
+            },
+            buttonLabel: { zh: "打开数字音频接口实验室", en: "Open digital audio interface lab" }
+          },
+          misconception: {
+            zh: "I2S/TDM/PDM 不是 MP3、AAC、Opus 这类压缩格式，也不是 ADC/DAC 本身；它们是芯片或设备之间搬运数字音频数据的接口协议。",
+            en: "I2S/TDM/PDM are not compression formats like MP3, AAC, or Opus, and they are not ADC/DAC conversion itself; they are interface protocols for transporting digital audio data between chips or devices."
+          },
+          contentDirection: {
+            zh: "后续适合扩展为接口时序图实验室：切换 I2S、TDM、PDM、SPDIF 和 USB Audio，观察时钟线、数据线、帧同步、声道 slot 和常见配置错误。",
+            en: "This can later become an interface timing lab: switch I2S, TDM, PDM, SPDIF, and USB Audio to inspect clock lines, data lines, frame sync, channel slots, and common configuration mistakes."
           }
         }
       },

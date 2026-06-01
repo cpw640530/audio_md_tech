@@ -12,6 +12,7 @@ type TopicDetailsProps = {
   onClose: () => void;
   onOpenCodecLab: () => void;
   onOpenDigitalLab: () => void;
+  onOpenDigitalInterfaceLab: () => void;
   onOpenListeningMetricsLab: () => void;
   onOpenMicrophoneLab: () => void;
   onOpenSoundLab: () => void;
@@ -90,6 +91,7 @@ export function TopicDetails({
   onClose,
   onOpenCodecLab,
   onOpenDigitalLab,
+  onOpenDigitalInterfaceLab,
   onOpenListeningMetricsLab,
   onOpenMicrophoneLab,
   onOpenSoundLab
@@ -199,6 +201,11 @@ export function TopicDetails({
 
                     if (topic.detail.lab?.type === "codec-hardware") {
                       onOpenCodecLab();
+                      return;
+                    }
+
+                    if (topic.detail.lab?.type === "digital-interface") {
+                      onOpenDigitalInterfaceLab();
                       return;
                     }
 
