@@ -416,7 +416,14 @@ describe("Audio knowledge app", () => {
     );
 
     expect(screen.getByRole("heading", { name: "ADC / DAC / Codec 实验室" })).toBeInTheDocument();
-    expect(screen.getByRole("img", { name: "ADC DAC Codec 转换图" })).toBeInTheDocument();
+    const conversionChart = screen.getByRole("img", { name: "ADC DAC Codec 转换图" });
+    expect(conversionChart).toBeInTheDocument();
+    expect(conversionChart.querySelector(".codec-diagram-chain")).not.toBeInTheDocument();
+    expect(conversionChart.querySelector(".codec-analog-path")).toBeInTheDocument();
+    expect(conversionChart.querySelector(".codec-quant-grid")).toBeInTheDocument();
+    expect(conversionChart.querySelector(".codec-reconstruction-path")).not.toBeInTheDocument();
+    expect(conversionChart.querySelector(".codec-playback-path")).not.toBeInTheDocument();
+    expect(screen.getByLabelText("ADC 采集流程图").querySelectorAll(".codec-flow-step")).toHaveLength(5);
     expect(screen.getByText("ADC：模拟电压变成数字样本")).toBeInTheDocument();
 
     fireEvent.change(screen.getByRole("slider", { name: "输入电平" }), {
@@ -438,11 +445,28 @@ describe("Audio knowledge app", () => {
 
     await user.click(screen.getByRole("button", { name: "DAC 重建" }));
     expect(screen.getByText("DAC：数字样本重建成模拟输出")).toBeInTheDocument();
+    expect(conversionChart.querySelector(".codec-analog-path")).not.toBeInTheDocument();
+    expect(conversionChart.querySelector(".codec-quant-grid")).not.toBeInTheDocument();
+    expect(conversionChart.querySelectorAll(".codec-sub-axis")).toHaveLength(2);
+    expect(conversionChart.querySelector(".codec-step-path")).toBeInTheDocument();
+    expect(conversionChart.querySelector(".codec-reconstruction-path")).toBeInTheDocument();
+    expect(screen.getByLabelText("DAC 重建流程图").querySelectorAll(".codec-flow-step")).toHaveLength(5);
     expect(screen.getAllByText("重建滤波").length).toBeGreaterThan(0);
 
     await user.click(screen.getByRole("button", { name: "Codec 芯片链路" }));
     expect(screen.getByText("Codec 芯片：采集、播放和路由集成")).toBeInTheDocument();
-    expect(screen.getByText("I2S/TDM")).toBeInTheDocument();
+    expect(conversionChart.querySelectorAll(".codec-lane-bg")).toHaveLength(2);
+    expect(conversionChart.querySelector(".codec-capture-path")).toBeInTheDocument();
+    expect(conversionChart.querySelector(".codec-playback-path")).toBeInTheDocument();
+    const codecFlow = screen.getByLabelText("Codec 芯片链路流程图");
+    expect(within(codecFlow).getByText("录音链路")).toBeInTheDocument();
+    expect(within(codecFlow).getByText("播放链路")).toBeInTheDocument();
+    expect(codecFlow.querySelectorAll(".codec-flow-step")).toHaveLength(10);
+    expect(within(codecFlow).getByText("PGA")).toBeInTheDocument();
+    expect(within(codecFlow).getByText("ADC")).toBeInTheDocument();
+    expect(within(codecFlow).getByText("DAC")).toBeInTheDocument();
+    expect(within(codecFlow).getByText("Speaker")).toBeInTheDocument();
+    expect(within(codecFlow).getAllByText("I2S/TDM")).toHaveLength(2);
   });
 
   it("expands microphone knowledge with detailed hardware concepts and a lab entry", async () => {
