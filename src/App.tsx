@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { CategoryTabs } from "./components/CategoryTabs";
+import { CodecHardwareLab } from "./components/CodecHardwareLab";
 import { DigitalAudioLab } from "./components/DigitalAudioLab";
 import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
@@ -79,7 +80,7 @@ function topicMatchesSearch(topic: DisplayTopic, query: string): boolean {
 export default function App() {
   const [language, setLanguage] = useState<Language>("zh");
   const [activeCategory, setActiveCategory] = useState("all");
-  const [activeView, setActiveView] = useState<"knowledge" | "soundLab" | "digitalLab" | "listeningLab" | "microphoneLab">("knowledge");
+  const [activeView, setActiveView] = useState<"knowledge" | "soundLab" | "digitalLab" | "listeningLab" | "microphoneLab" | "codecLab">("knowledge");
   const [query, setQuery] = useState("");
   const [selectedTopic, setSelectedTopic] = useState<DisplayTopic | null>(null);
 
@@ -199,6 +200,24 @@ export default function App() {
     );
   }
 
+  if (activeView === "codecLab") {
+    return (
+      <div className="app-shell">
+        <Header
+          language={language}
+          onToggleLanguage={() => setLanguage((current) => (current === "zh" ? "en" : "zh"))}
+        />
+        <CodecHardwareLab language={language} onBack={() => setActiveView("knowledge")} />
+        <footer className="site-footer">
+          <span>{interfaceCopy.footer[language]}</span>
+          <a href="docs/audio_technology_knowledge_outline.md">
+            {language === "zh" ? "查看 Markdown 大纲" : "Open Markdown outline"}
+          </a>
+        </footer>
+      </div>
+    );
+  }
+
   return (
     <div className="app-shell">
       <Header
@@ -240,6 +259,10 @@ export default function App() {
               onOpenMicrophoneLab={() => {
                 setSelectedTopic(null);
                 setActiveView("microphoneLab");
+              }}
+              onOpenCodecLab={() => {
+                setSelectedTopic(null);
+                setActiveView("codecLab");
               }}
               topic={selectedTopic}
             />

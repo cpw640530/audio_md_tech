@@ -1124,6 +1124,15 @@ body.details-open {
   width: 100%;
 }
 
+.codec-lab-page {
+  display: grid;
+  gap: 24px;
+  margin: 0 auto;
+  max-width: 1180px;
+  padding: 34px clamp(18px, 4vw, 56px) 42px;
+  width: 100%;
+}
+
 .digital-lab-workbench {
   align-items: stretch;
   background: #17211f;
@@ -1157,6 +1166,18 @@ body.details-open {
   display: grid;
   gap: 18px;
   grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
+  padding: clamp(16px, 3vw, 26px);
+}
+
+.codec-lab-workbench {
+  align-items: stretch;
+  background: #17211f;
+  border: 1px solid rgba(23, 33, 31, 0.12);
+  border-radius: 8px;
+  box-shadow: 0 18px 54px rgba(23, 33, 31, 0.16);
+  display: grid;
+  gap: 18px;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 390px);
   padding: clamp(16px, 3vw, 26px);
 }
 
@@ -1281,6 +1302,12 @@ body.details-open {
   min-width: 0;
 }
 
+.codec-lab-visual {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
 .digital-lab-status {
   align-items: center;
   color: #c9d8d4;
@@ -1307,6 +1334,12 @@ body.details-open {
 }
 
 .microphone-visual svg {
+  display: block;
+  height: auto;
+  max-width: 100%;
+}
+
+.codec-lab-visual svg {
   display: block;
   height: auto;
   max-width: 100%;
@@ -1374,6 +1407,95 @@ body.details-open {
   display: grid;
   gap: 16px;
   padding: 16px;
+}
+
+.codec-lab-panel {
+  align-content: start;
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+}
+
+.codec-analog-path {
+  fill: none;
+  stroke: url("#codecAnalogLine");
+  stroke-linecap: round;
+  stroke-width: 5;
+}
+
+.codec-step-path {
+  fill: none;
+  stroke: #f0b46a;
+  stroke-linejoin: round;
+  stroke-width: 4;
+}
+
+.codec-chain {
+  display: grid;
+  gap: 8px;
+}
+
+.codec-chain-item {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #dbe8e4;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  min-height: 38px;
+  padding: 8px 10px;
+}
+
+.codec-chain-item strong {
+  color: #ffffff;
+  font-size: 0.92rem;
+}
+
+.codec-chain-item span {
+  color: #f0b46a;
+  font-weight: 820;
+}
+
+.codec-lab-panel .lab-live-note {
+  display: grid;
+  gap: 6px;
+}
+
+.codec-lab-panel .lab-live-note strong {
+  color: #ffffff;
+}
+
+.codec-lab-panel .lab-live-note span {
+  color: #dbe8e4;
+}
+
+.codec-concept-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.codec-concept-grid article {
+  background: #ffffff;
+  border: 1px solid rgba(23, 33, 31, 0.1);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.codec-concept-grid h2 {
+  color: #17211f;
+  font-size: 1.05rem;
+  margin: 0 0 8px;
+}
+
+.codec-concept-grid p {
+  color: #4f5d59;
+  margin: 0;
 }
 
 .listening-effect-grid {
@@ -1986,7 +2108,8 @@ body.details-open {
   .digital-lab-workbench,
   .listening-lab-workbench,
   .mic-principle-workbench,
-  .microphone-lab-workbench {
+  .microphone-lab-workbench,
+  .codec-lab-workbench {
     grid-template-columns: 1fr;
   }
 
@@ -1996,6 +2119,10 @@ body.details-open {
 
   .lab-concepts,
   .mic-knowledge-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .codec-concept-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -2045,7 +2172,8 @@ body.details-open {
   .sound-lab-page,
   .digital-lab-page,
   .listening-lab-page,
-  .microphone-lab-page {
+  .microphone-lab-page,
+  .codec-lab-page {
     padding-inline: 16px;
   }
 
@@ -2055,6 +2183,7 @@ body.details-open {
   .mic-example-grid,
   .lab-concepts,
   .mic-knowledge-grid,
+  .codec-concept-grid,
   .codec-table,
   .pcm-word-grid,
   .listening-metric-cards,

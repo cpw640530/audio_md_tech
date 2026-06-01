@@ -388,6 +388,63 @@ describe("Audio knowledge app", () => {
     expect(screen.getByText(/保存当前采样与预测值之间的差分/)).toBeInTheDocument();
   });
 
+  it("expands ADC DAC Codec hardware knowledge with detailed terms and a lab entry", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getByRole("button", { name: /ADC \/ DAC \/ Codec/ }));
+
+    const details = screen.getByRole("dialog", { name: "主题详情" });
+    expect(within(details).getByText(/ADC 把麦克风、线路输入等模拟电压/)).toBeInTheDocument();
+    expect(within(details).getByRole("heading", { name: "ADC" })).toBeInTheDocument();
+    expect(within(details).getByRole("heading", { name: "DAC" })).toBeInTheDocument();
+    expect(within(details).getByRole("heading", { name: "音频 Codec 芯片" })).toBeInTheDocument();
+    expect(within(details).getByRole("heading", { name: "PGA / 前级增益" })).toBeInTheDocument();
+    expect(within(details).getByRole("heading", { name: "I2S / PDM / TDM" })).toBeInTheDocument();
+    expect(within(details).getByRole("button", { name: "打开 ADC / DAC / Codec 实验室" })).toBeInTheDocument();
+  });
+
+  it("lets readers explore ADC DAC Codec conversion and interface behavior", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getByRole("button", { name: /ADC \/ DAC \/ Codec/ }));
+    await user.click(
+      within(screen.getByRole("dialog", { name: "主题详情" })).getByRole("button", {
+        name: "打开 ADC / DAC / Codec 实验室"
+      })
+    );
+
+    expect(screen.getByRole("heading", { name: "ADC / DAC / Codec 实验室" })).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "ADC DAC Codec 转换图" })).toBeInTheDocument();
+    expect(screen.getByText("ADC：模拟电压变成数字样本")).toBeInTheDocument();
+
+    fireEvent.change(screen.getByRole("slider", { name: "输入电平" }), {
+      target: { value: "120" }
+    });
+    fireEvent.change(screen.getByRole("slider", { name: "采样点数" }), {
+      target: { value: "40" }
+    });
+    fireEvent.change(screen.getByRole("slider", { name: "位深" }), {
+      target: { value: "7" }
+    });
+    fireEvent.change(screen.getByRole("slider", { name: "时钟抖动" }), {
+      target: { value: "32" }
+    });
+
+    expect(screen.getByText("量化等级：128 级 · 采样点：40")).toBeInTheDocument();
+    expect(screen.getByText("削波风险 36%")).toBeInTheDocument();
+    expect(screen.getByText("抖动风险 27%")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "DAC 重建" }));
+    expect(screen.getByText("DAC：数字样本重建成模拟输出")).toBeInTheDocument();
+    expect(screen.getAllByText("重建滤波").length).toBeGreaterThan(0);
+
+    await user.click(screen.getByRole("button", { name: "Codec 芯片链路" }));
+    expect(screen.getByText("Codec 芯片：采集、播放和路由集成")).toBeInTheDocument();
+    expect(screen.getByText("I2S/TDM")).toBeInTheDocument();
+  });
+
   it("expands microphone knowledge with detailed hardware concepts and a lab entry", async () => {
     const user = userEvent.setup();
     render(<App />);

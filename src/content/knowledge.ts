@@ -24,7 +24,7 @@ export type TopicDiagram = {
 };
 
 export type TopicLab = {
-  type: "sampling-quantization" | "listening-metrics" | "microphone";
+  type: "sampling-quantization" | "listening-metrics" | "microphone" | "codec-hardware";
   title: LocalizedText;
   description: LocalizedText;
   buttonLabel: LocalizedText;
@@ -518,31 +518,113 @@ export const categories: Category[] = [
       {
         title: { zh: "ADC / DAC / Codec", en: "ADC / DAC / Codec" },
         summary: {
-          zh: "说明模拟和数字之间的转换，以及时钟、电源和噪声如何影响音质。",
-          en: "Explain conversion between analog and digital audio, and how clocking, power, and noise affect quality."
+          zh: "理解模拟音频如何采样成数字、数字音频如何重建为模拟，以及音频 Codec 芯片如何整合整条链路。",
+          en: "Understand how analog audio becomes digital samples, how digital audio is reconstructed to analog, and how audio codec chips integrate the whole chain."
         },
         bullets: [
-          { zh: "ADC 和 DAC 指标", en: "ADC and DAC specifications" },
-          { zh: "音频 Codec 芯片", en: "Audio codec chips" },
-          { zh: "时钟、抖动、电源噪声", en: "Clocking, jitter, power noise" }
+          { zh: "ADC 采样、量化、抗混叠和输入范围", en: "ADC sampling, quantization, anti-aliasing, and input range" },
+          { zh: "DAC 重建、保持、低通滤波和输出驱动", en: "DAC reconstruction, hold, low-pass filtering, and output drive" },
+          { zh: "Codec 芯片、PGA、混音、I2S/PDM/TDM、时钟和电源噪声", en: "Codec chips, PGA, mixing, I2S/PDM/TDM, clocking, and power noise" }
         ],
         detail: {
           explanation: {
-            zh: "ADC 把模拟音频转换为数字采样，DAC 把数字采样还原为模拟信号，音频 Codec 芯片通常把 ADC、DAC、放大、混音和接口集成在一起。这个链路决定了噪声底、动态范围、失真和系统可调能力。",
-            en: "An ADC converts analog audio into digital samples, while a DAC reconstructs analog signals from digital samples. An audio codec chip often integrates ADCs, DACs, amplifiers, mixers, and interfaces, shaping noise floor, dynamic range, distortion, and system control."
+            zh: "ADC 把麦克风、线路输入等模拟电压按固定时钟采样并量化成数字样本；DAC 把数字样本转换成阶梯状或调制后的模拟信号，再经过重建滤波和输出级驱动耳机、功放或线路输出。音频 Codec 芯片通常把 ADC、DAC、PGA、耳机放大、混音、数字滤波、时钟和 I2S/PDM/TDM 接口集成在一起，是嵌入式音频链路的核心器件。",
+            en: "An ADC samples and quantizes analog voltage from microphones or line inputs into digital samples. A DAC converts digital samples into stepped or modulated analog signals, then uses reconstruction filtering and output stages to drive headphones, amplifiers, or line outputs. An audio codec chip often integrates ADCs, DACs, PGA, headphone amps, mixers, digital filters, clocks, and I2S/PDM/TDM interfaces."
           },
           keyConcepts: [
-            { zh: "前端增益和输入范围决定是否容易削波或把底噪一起放大。", en: "Front-end gain and input range determine whether signals clip or amplify the noise floor." },
-            { zh: "时钟抖动会影响采样时间稳定性，电源噪声可能进入模拟链路。", en: "Clock jitter affects sampling-time stability, and power noise can leak into the analog path." },
-            { zh: "I2S、PDM、TDM 等接口决定芯片之间如何传递音频数据。", en: "I2S, PDM, TDM, and similar interfaces define how chips exchange audio data." }
+            { zh: "ADC 之前的模拟前端决定输入电平、增益和抗混叠；输入过大会削波，输入太小会让底噪占比变高。", en: "The analog front end before an ADC sets input level, gain, and anti-aliasing; too much level clips, while too little level exposes noise." },
+            { zh: "DAC 之后的重建滤波、输出阻抗、负载能力和耳机/功放匹配决定实际播放质量。", en: "After a DAC, reconstruction filtering, output impedance, load drive, and headphone/amplifier matching shape playback quality." },
+            { zh: "Codec 芯片不是 MP3/AAC 压缩算法，而是集成音频转换、模拟通路、数字接口和控制寄存器的硬件芯片。", en: "A codec chip is not an MP3/AAC compression algorithm; it is hardware integrating conversion, analog paths, digital interfaces, and control registers." },
+            { zh: "采样时钟、PLL、MCLK/BCLK/LRCLK 配置错误会造成采样率不准、变调、爆音、丢帧或左右声道错位。", en: "Wrong sample clocks, PLL, MCLK/BCLK/LRCLK settings can cause sample-rate errors, pitch shift, pops, dropouts, or channel misalignment." }
           ],
+          termExplanations: [
+            {
+              name: { zh: "ADC", en: "ADC" },
+              explanation: {
+                zh: "ADC 是模数转换器，把连续的模拟电压转换成离散数字样本。音频 ADC 通常包含采样保持、量化、数字滤波和抽取，现代芯片多采用 Σ-Δ 架构以获得较高动态范围。",
+                en: "An ADC converts continuous analog voltage into discrete digital samples. Audio ADCs usually include sample-and-hold, quantization, digital filtering, and decimation; modern parts often use sigma-delta architectures for high dynamic range."
+              }
+            },
+            {
+              name: { zh: "DAC", en: "DAC" },
+              explanation: {
+                zh: "DAC 是数模转换器，把数字样本重建为模拟电压或电流。音频 DAC 通常经过过采样、噪声整形、模拟低通滤波和输出缓冲，最后驱动线路输出、耳机或功放。",
+                en: "A DAC reconstructs digital samples into analog voltage or current. Audio DACs usually use oversampling, noise shaping, analog low-pass filtering, and output buffering before driving line out, headphones, or amplifiers."
+              }
+            },
+            {
+              name: { zh: "音频 Codec 芯片", en: "Audio codec chip" },
+              explanation: {
+                zh: "硬件 Codec 芯片把 ADC、DAC、PGA、耳机放大、麦克风偏置、混音矩阵、音量控制和数字接口集成在一起。它负责硬件通路，不等同于 MP3、AAC、Opus 这类压缩编码算法。",
+                en: "A hardware codec chip integrates ADCs, DACs, PGA, headphone amps, mic bias, mixers, volume controls, and digital interfaces. It handles hardware paths, not compression formats such as MP3, AAC, or Opus."
+              }
+            },
+            {
+              name: { zh: "PGA / 前级增益", en: "PGA / preamp gain" },
+              explanation: {
+                zh: "PGA 是可编程增益放大器，用来把麦克风或线路输入调整到 ADC 合适范围。增益太小会浪费动态范围，增益太大则可能削波并把噪声一起放大。",
+                en: "A PGA is a programmable gain amplifier that brings mic or line input into the ADC's usable range. Too little gain wastes dynamic range; too much clips and amplifies noise."
+              }
+            },
+            {
+              name: { zh: "抗混叠滤波", en: "Anti-alias filter" },
+              explanation: {
+                zh: "采样前需要限制高于奈奎斯特频率的内容，否则高频会折叠成错误低频。现代音频 ADC 通常用模拟前端加过采样数字滤波共同完成抗混叠。",
+                en: "Before sampling, content above the Nyquist frequency must be limited or it folds into false lower frequencies. Modern audio ADCs combine analog front-end filtering with oversampled digital filtering."
+              }
+            },
+            {
+              name: { zh: "重建滤波", en: "Reconstruction filter" },
+              explanation: {
+                zh: "DAC 输出后会出现采样镜像和阶梯成分，需要低通重建滤波去除超声频镜像，让输出更接近连续模拟波形。",
+                en: "DAC output contains sampling images and stepped components. A low-pass reconstruction filter removes ultrasonic images and makes the output closer to a continuous analog waveform."
+              }
+            },
+            {
+              name: { zh: "动态范围 / SNR", en: "Dynamic range / SNR" },
+              explanation: {
+                zh: "动态范围描述最大不失真信号和噪声底之间的跨度。ADC/DAC 的 ENOB、SNR、THD+N、模拟布局和电源噪声都会影响真实可用动态范围。",
+                en: "Dynamic range is the span between maximum unclipped signal and noise floor. ENOB, SNR, THD+N, analog layout, and power noise all affect usable converter range."
+              }
+            },
+            {
+              name: { zh: "时钟与抖动", en: "Clocking and jitter" },
+              explanation: {
+                zh: "音频采样依赖稳定时钟。抖动是采样或重建时刻的微小偏差，严重时会带来噪声、失真或声像模糊；实际系统还要正确配置 MCLK、BCLK、LRCLK 和 PLL。",
+                en: "Audio conversion depends on stable clocks. Jitter is tiny timing error in sampling or reconstruction; when severe it can add noise, distortion, or image blur. Systems also need correct MCLK, BCLK, LRCLK, and PLL configuration."
+              }
+            },
+            {
+              name: { zh: "I2S / PDM / TDM", en: "I2S / PDM / TDM" },
+              explanation: {
+                zh: "I2S 常用于双声道 PCM 音频，PDM 常见于数字 MEMS 麦克风，TDM 可在一组时钟线上承载多路音频。接口格式、位宽、左右对齐和主从时钟必须匹配。",
+                en: "I2S commonly carries stereo PCM, PDM is common for digital MEMS microphones, and TDM carries multiple channels on shared clocks. Format, word length, alignment, and clock master/slave roles must match."
+              }
+            },
+            {
+              name: { zh: "电源与模拟布局", en: "Power and analog layout" },
+              explanation: {
+                zh: "Codec 周围的电源纹波、地回路、模拟/数字隔离、参考电压和去耦电容会直接影响噪声、串扰和爆音。数据手册推荐布局通常非常关键。",
+                en: "Power ripple, ground loops, analog/digital separation, voltage references, and decoupling near a codec directly affect noise, crosstalk, and pops. Datasheet layout guidance is often critical."
+              }
+            }
+          ],
+          lab: {
+            type: "codec-hardware",
+            title: { zh: "ADC / DAC / Codec 实验室", en: "ADC / DAC / Codec Lab" },
+            description: {
+              zh: "进入独立界面切换 ADC 采集、DAC 重建和 Codec 芯片链路，调节输入电平、采样率、位深和时钟抖动，观察削波、量化噪声、重建滤波和接口数据流。",
+              en: "Open an independent lab to switch ADC capture, DAC reconstruction, and codec-chip paths, then adjust input level, sample rate, bit depth, and clock jitter to observe clipping, quantization noise, reconstruction filtering, and interface flow."
+            },
+            buttonLabel: { zh: "打开 ADC / DAC / Codec 实验室", en: "Open ADC / DAC / Codec lab" }
+          },
           misconception: {
-            zh: "硬件 Codec 芯片和 MP3、AAC 这类编解码算法不是同一个概念；前者是音频转换和接口芯片，后者是压缩格式算法。",
-            en: "A hardware codec chip is not the same thing as an MP3 or AAC codec algorithm; the former handles conversion and interfaces, while the latter compresses audio data."
+            zh: "硬件 Codec 芯片和 MP3、AAC 这类编解码算法不是同一个概念；前者是音频转换、模拟通路和接口芯片，后者是压缩格式算法。",
+            en: "A hardware codec chip is not the same thing as an MP3 or AAC codec algorithm; the former handles conversion, analog paths, and interfaces, while the latter compresses audio data."
           },
           contentDirection: {
-            zh: "适合扩展为从麦克风到扬声器的硬件链路图，并用指标说明每一级可能引入的噪声、失真和延迟。",
-            en: "This can become a microphone-to-speaker hardware chain diagram that labels where noise, distortion, and latency can enter each stage."
+            zh: "适合继续扩展为从麦克风到扬声器的硬件链路图、Codec 寄存器配置示例、I2S/PDM/TDM 时序图，以及噪声、失真、爆音和时钟问题排查清单。",
+            en: "This can expand into microphone-to-speaker hardware chain diagrams, codec register examples, I2S/PDM/TDM timing diagrams, and checklists for noise, distortion, pops, and clocking problems."
           }
         }
       },
