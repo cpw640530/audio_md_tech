@@ -2750,7 +2750,16 @@ body.details-open {
   }
 
   .amp-lab-chain {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
+  }
+
+  .amp-chain-arrow {
+    font-size: 0;
+  }
+
+  .amp-chain-arrow::before {
+    content: "↓";
+    font-size: 1.2rem;
   }
 
   .pcm-word-grid {
@@ -2808,20 +2817,10 @@ body.details-open {
   .mic-knowledge-grid,
   .codec-concept-grid,
   .codec-table,
-  .amp-lab-chain,
   .pcm-word-grid,
   .listening-metric-cards,
   .metric-modal-grid {
     grid-template-columns: 1fr;
-  }
-
-  .amp-chain-arrow {
-    font-size: 0;
-  }
-
-  .amp-chain-arrow::before {
-    content: "↓";
-    font-size: 1.2rem;
   }
 
   .diagram-open-button,
