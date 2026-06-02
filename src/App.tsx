@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { AmplifierSpeakerLab } from "./components/AmplifierSpeakerLab";
 import { CategoryTabs } from "./components/CategoryTabs";
 import { CodecHardwareLab } from "./components/CodecHardwareLab";
 import { DigitalAudioLab } from "./components/DigitalAudioLab";
@@ -82,7 +83,14 @@ export default function App() {
   const [language, setLanguage] = useState<Language>("zh");
   const [activeCategory, setActiveCategory] = useState("all");
   const [activeView, setActiveView] = useState<
-    "knowledge" | "soundLab" | "digitalLab" | "listeningLab" | "microphoneLab" | "codecLab" | "digitalInterfaceLab"
+    | "knowledge"
+    | "soundLab"
+    | "digitalLab"
+    | "listeningLab"
+    | "microphoneLab"
+    | "codecLab"
+    | "digitalInterfaceLab"
+    | "amplifierSpeakerLab"
   >("knowledge");
   const [query, setQuery] = useState("");
   const [selectedTopic, setSelectedTopic] = useState<DisplayTopic | null>(null);
@@ -239,6 +247,24 @@ export default function App() {
     );
   }
 
+  if (activeView === "amplifierSpeakerLab") {
+    return (
+      <div className="app-shell">
+        <Header
+          language={language}
+          onToggleLanguage={() => setLanguage((current) => (current === "zh" ? "en" : "zh"))}
+        />
+        <AmplifierSpeakerLab language={language} onBack={() => setActiveView("knowledge")} />
+        <footer className="site-footer">
+          <span>{interfaceCopy.footer[language]}</span>
+          <a href="docs/audio_technology_knowledge_outline.md">
+            {language === "zh" ? "查看 Markdown 大纲" : "Open Markdown outline"}
+          </a>
+        </footer>
+      </div>
+    );
+  }
+
   return (
     <div className="app-shell">
       <Header
@@ -265,6 +291,10 @@ export default function App() {
             <TopicDetails
               language={language}
               onClose={() => setSelectedTopic(null)}
+              onOpenAmplifierSpeakerLab={() => {
+                setSelectedTopic(null);
+                setActiveView("amplifierSpeakerLab");
+              }}
               onOpenSoundLab={() => {
                 setSelectedTopic(null);
                 setActiveView("soundLab");

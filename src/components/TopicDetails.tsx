@@ -10,6 +10,7 @@ type TopicDetailsProps = {
   language: Language;
   topic: DisplayTopic;
   onClose: () => void;
+  onOpenAmplifierSpeakerLab: () => void;
   onOpenCodecLab: () => void;
   onOpenDigitalLab: () => void;
   onOpenDigitalInterfaceLab: () => void;
@@ -89,6 +90,7 @@ export function TopicDetails({
   language,
   topic,
   onClose,
+  onOpenAmplifierSpeakerLab,
   onOpenCodecLab,
   onOpenDigitalLab,
   onOpenDigitalInterfaceLab,
@@ -206,6 +208,11 @@ export function TopicDetails({
 
                     if (topic.detail.lab?.type === "digital-interface") {
                       onOpenDigitalInterfaceLab();
+                      return;
+                    }
+
+                    if (topic.detail.lab?.type === "amplifier-speaker") {
+                      onOpenAmplifierSpeakerLab();
                       return;
                     }
 

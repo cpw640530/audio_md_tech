@@ -421,6 +421,27 @@ describe("Audio knowledge app", () => {
     expect(within(details).getByRole("button", { name: "打开功放与扬声器实验室" })).toBeInTheDocument();
   });
 
+  it("opens the amplifier speaker lab from the hardware topic", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getByRole("button", { name: /功放与扬声器/ }));
+    await user.click(
+      within(screen.getByRole("dialog", { name: "主题详情" })).getByRole("button", {
+        name: "打开功放与扬声器实验室"
+      })
+    );
+
+    expect(screen.getByRole("heading", { name: "功放与扬声器实验室" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "返回知识库" })).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "功放与扬声器信号链" })).toBeInTheDocument();
+    expect(screen.getByText("DAC / Codec 输出")).toBeInTheDocument();
+    expect(screen.getByText("功放")).toBeInTheDocument();
+    expect(screen.getByText("分频 / 保护")).toBeInTheDocument();
+    expect(screen.getByText("扬声器单元")).toBeInTheDocument();
+    expect(screen.getByText("空气声波")).toBeInTheDocument();
+  });
+
   it("places digital audio interfaces as a separate hardware topic", async () => {
     const user = userEvent.setup();
     render(<App />);
