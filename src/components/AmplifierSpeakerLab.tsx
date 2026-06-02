@@ -52,11 +52,22 @@ const ampClasses: Array<{ id: AmpClass; label: string; copy: Record<Language, st
 
 function renderAmplifierDiagram(language: Language, ampClass: AmpClass) {
   const currentCopy = ampClasses.find((item) => item.id === ampClass)?.copy[language] ?? ampClasses[2].copy[language];
+  const ampClassLabel = ampClasses.find((item) => item.id === ampClass)?.label ?? "Class D";
+  const outputLabel = {
+    "class-a": { zh: "线性连续输出", en: "Linear continuous output" },
+    "class-ab": { zh: "正负半周交替输出", en: "Positive and negative halves alternate" },
+    "class-d": { zh: "PWM 开关输出", en: "PWM switching output" }
+  } satisfies Record<AmpClass, Record<Language, string>>;
+  const outputWave = {
+    "class-a": "M 72 248 C 108 196 144 196 180 248 S 252 300 288 248",
+    "class-ab": "M 72 248 C 96 208 120 208 144 248 H 168 C 192 288 216 288 240 248 H 264",
+    "class-d": "M 72 248 H 96 V 210 H 120 V 248 H 144 V 210 H 168 V 248 H 192 V 210 H 216 V 248 H 240 V 210 H 264 V 248"
+  } satisfies Record<AmpClass, string>;
 
   return (
     <figure className="amp-diagram-figure">
       <svg
-        aria-label={language === "zh" ? "Class D 功放图解" : "Class D amplifier diagram"}
+        aria-label={language === "zh" ? `${ampClassLabel} 功放图解` : `${ampClassLabel} amplifier diagram`}
         role="img"
         viewBox="0 0 760 360"
         xmlns="http://www.w3.org/2000/svg"
@@ -74,9 +85,19 @@ function renderAmplifierDiagram(language: Language, ampClass: AmpClass) {
           {language === "zh" ? "功率输出级" : "Power stage"}
         </text>
         <text className="lab-label" x="72" y="216">
-          {language === "zh" ? "PWM 开关输出" : "PWM switching output"}
+          {outputLabel[ampClass][language]}
         </text>
-        <path className="interface-clock-line" d="M 72 248 H 96 V 210 H 120 V 248 H 144 V 210 H 168 V 248 H 192 V 210 H 216 V 248 H 240 V 210 H 264 V 248" />
+        <path className="interface-clock-line" d={outputWave[ampClass]} />
+        {ampClass === "class-ab" ? (
+          <>
+            <text className="interface-node-sub" x="122" y="300">
+              {language === "zh" ? "正半周" : "Positive half"}
+            </text>
+            <text className="interface-node-sub" x="220" y="300">
+              {language === "zh" ? "负半周" : "Negative half"}
+            </text>
+          </>
+        ) : null}
         <rect className="amp-block muted" height="76" rx="10" width="190" x="460" y="212" />
         <text className="interface-node-text" x="555" y="242">
           {language === "zh" ? "输出滤波 / 扬声器负载" : "Output filter / speaker load"}
@@ -178,6 +199,11 @@ function renderMatchingDiagram(language: Language) {
         viewBox="0 0 760 360"
         xmlns="http://www.w3.org/2000/svg"
       >
+        <defs>
+          <marker id="ampMatchArrow" markerHeight="10" markerWidth="10" orient="auto" refX="8" refY="5">
+            <path d="M 0 0 L 10 5 L 0 10 Z" fill="#f0b46a" />
+          </marker>
+        </defs>
         <rect className="lab-diagram-bg" height="360" rx="14" width="760" />
         {nodes.map((node) => (
           <g key={node.label}>
@@ -187,9 +213,9 @@ function renderMatchingDiagram(language: Language) {
             </text>
           </g>
         ))}
-        <path className="interface-flow-arrow" d="M 178 126 L 322 126" />
-        <path className="interface-flow-arrow" d="M 358 164 L 292 216" />
-        <path className="interface-flow-arrow" d="M 208 216 L 152 164" />
+        <path className="interface-flow-arrow amp-matching-arrow" d="M 178 126 L 322 126" />
+        <path className="interface-flow-arrow amp-matching-arrow" d="M 358 164 L 292 216" />
+        <path className="interface-flow-arrow amp-matching-arrow" d="M 208 216 L 152 164" />
         <text className="lab-chip" x="462" y="260">
           {language === "zh" ? "保护限制最大输出" : "Protection limits maximum output"}
         </text>
@@ -270,7 +296,7 @@ export function AmplifierSpeakerLab({ language, onBack }: AmplifierSpeakerLabPro
             {diagramModes.map((mode) => (
               <button
                 aria-pressed={diagramMode === mode.id}
-                className={diagramMode === mode.id ? "active" : ""}
+                className={diagramMode === mode.id ? "waveform-tab active" : "waveform-tab"}
                 key={mode.id}
                 type="button"
                 onClick={() => setDiagramMode(mode.id)}
@@ -289,7 +315,7 @@ export function AmplifierSpeakerLab({ language, onBack }: AmplifierSpeakerLabPro
               {ampClasses.map((item) => (
                 <button
                   aria-pressed={ampClass === item.id}
-                  className={ampClass === item.id ? "active" : ""}
+                  className={ampClass === item.id ? "waveform-tab active" : "waveform-tab"}
                   key={item.id}
                   type="button"
                   onClick={() => setAmpClass(item.id)}

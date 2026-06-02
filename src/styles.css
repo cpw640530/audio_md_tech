@@ -1803,6 +1803,10 @@ body.details-open {
   stroke-width: 4;
 }
 
+.amp-matching-arrow {
+  marker-end: url("#ampMatchArrow");
+}
+
 .interface-node,
 .interface-device-node {
   fill: rgba(255, 255, 255, 0.075);
@@ -1824,6 +1828,89 @@ body.details-open {
   stroke: #f0b46a;
   stroke-dasharray: 8 8;
   stroke-width: 4;
+}
+
+.amp-diagram-figure {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+}
+
+.amp-diagram-figure svg {
+  display: block;
+  height: auto;
+  width: 100%;
+}
+
+.amp-diagram-figure figcaption {
+  color: #dbe8e4;
+  font-weight: 720;
+  line-height: 1.5;
+}
+
+.amp-wave-input,
+.amp-air-wave {
+  fill: none;
+  stroke: #7ee7d8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.amp-wave-input {
+  stroke-width: 5;
+}
+
+.amp-block,
+.amp-match-node {
+  fill: rgba(126, 231, 216, 0.13);
+  stroke: rgba(126, 231, 216, 0.45);
+  stroke-width: 2;
+}
+
+.amp-block.muted {
+  fill: rgba(255, 255, 255, 0.075);
+  stroke: rgba(255, 255, 255, 0.2);
+}
+
+.amp-magnet {
+  fill: rgba(240, 180, 106, 0.16);
+  stroke: rgba(240, 180, 106, 0.62);
+  stroke-width: 3;
+}
+
+.amp-voice-coil {
+  fill: rgba(126, 231, 216, 0.16);
+  stroke: #7ee7d8;
+  stroke-width: 3;
+}
+
+.amp-cone {
+  fill: rgba(220, 236, 232, 0.12);
+  stroke: #dbe8e4;
+  stroke-linejoin: round;
+  stroke-width: 3;
+}
+
+.amp-air-wave {
+  stroke-width: 4;
+}
+
+.amp-speaker-box {
+  fill: rgba(255, 255, 255, 0.075);
+  stroke: rgba(220, 236, 232, 0.32);
+  stroke-width: 3;
+}
+
+.amp-driver-low {
+  fill: rgba(126, 231, 216, 0.14);
+  stroke: #7ee7d8;
+  stroke-width: 3;
+}
+
+.amp-driver-high {
+  fill: rgba(240, 180, 106, 0.16);
+  stroke: #f0b46a;
+  stroke-width: 3;
 }
 
 .listening-effect-grid {

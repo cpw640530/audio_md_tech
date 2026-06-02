@@ -459,9 +459,13 @@ describe("Audio knowledge app", () => {
     expect(screen.getByText("输出滤波 / 扬声器负载")).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "Class A" }));
+    expect(screen.getByRole("img", { name: "Class A 功放图解" })).toBeInTheDocument();
+    expect(screen.getByText("线性连续输出")).toBeInTheDocument();
     expect(screen.getByText("Class A：器件几乎一直导通，线性好但效率低")).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "Class AB" }));
+    expect(screen.getByRole("img", { name: "Class AB 功放图解" })).toBeInTheDocument();
+    expect(screen.getByText("正负半周交替输出")).toBeInTheDocument();
     expect(screen.getByText("Class AB：正负半周分担输出，效率和失真折中")).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "扬声器单元" }));
