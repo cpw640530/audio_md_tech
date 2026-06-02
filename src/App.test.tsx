@@ -442,6 +442,47 @@ describe("Audio knowledge app", () => {
     expect(screen.getByText("空气声波")).toBeInTheDocument();
   });
 
+  it("switches amplifier speaker lab diagram modes and amplifier classes", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getByRole("button", { name: /功放与扬声器/ }));
+    await user.click(
+      within(screen.getByRole("dialog", { name: "主题详情" })).getByRole("button", {
+        name: "打开功放与扬声器实验室"
+      })
+    );
+
+    expect(screen.getByRole("button", { name: "功放类型" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("img", { name: "Class D 功放图解" })).toBeInTheDocument();
+    expect(screen.getByText("PWM 开关输出")).toBeInTheDocument();
+    expect(screen.getByText("输出滤波 / 扬声器负载")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Class A" }));
+    expect(screen.getByText("Class A：器件几乎一直导通，线性好但效率低")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Class AB" }));
+    expect(screen.getByText("Class AB：正负半周分担输出，效率和失真折中")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "扬声器单元" }));
+    expect(screen.getByRole("img", { name: "动圈扬声器结构图" })).toBeInTheDocument();
+    expect(screen.getByText("音圈")).toBeInTheDocument();
+    expect(screen.getByText("磁路")).toBeInTheDocument();
+    expect(screen.getByText("振膜运动")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "箱体与分频" }));
+    expect(screen.getByRole("img", { name: "箱体与分频图解" })).toBeInTheDocument();
+    expect(screen.getByText("低音单元")).toBeInTheDocument();
+    expect(screen.getByText("高音单元")).toBeInTheDocument();
+    expect(screen.getByText("分频点")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "匹配关系" }));
+    expect(screen.getByRole("img", { name: "功放扬声器匹配图" })).toBeInTheDocument();
+    expect(screen.getByText("功率")).toBeInTheDocument();
+    expect(screen.getByText("阻抗")).toBeInTheDocument();
+    expect(screen.getByText("灵敏度")).toBeInTheDocument();
+  });
+
   it("places digital audio interfaces as a separate hardware topic", async () => {
     const user = userEvent.setup();
     render(<App />);
