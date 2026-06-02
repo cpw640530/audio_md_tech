@@ -404,6 +404,23 @@ describe("Audio knowledge app", () => {
     expect(within(details).getByRole("button", { name: "打开 ADC / DAC / Codec 实验室" })).toBeInTheDocument();
   });
 
+  it("expands amplifier speaker knowledge with detailed terms and a lab entry", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getByRole("button", { name: /功放与扬声器/ }));
+
+    const details = screen.getByRole("dialog", { name: "主题详情" });
+    expect(within(details).getByText(/功放负责把 DAC、Codec 或前级输出的小信号/)).toBeInTheDocument();
+    expect(within(details).getByRole("heading", { name: "功放是什么" })).toBeInTheDocument();
+    expect(within(details).getByRole("heading", { name: "Class A / AB / D" })).toBeInTheDocument();
+    expect(within(details).getByRole("heading", { name: "动圈扬声器" })).toBeInTheDocument();
+    expect(within(details).getByRole("heading", { name: "阻抗" })).toBeInTheDocument();
+    expect(within(details).getByRole("heading", { name: "灵敏度" })).toBeInTheDocument();
+    expect(within(details).getByRole("heading", { name: "分频器" })).toBeInTheDocument();
+    expect(within(details).getByRole("button", { name: "打开功放与扬声器实验室" })).toBeInTheDocument();
+  });
+
   it("places digital audio interfaces as a separate hardware topic", async () => {
     const user = userEvent.setup();
     render(<App />);

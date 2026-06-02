@@ -24,7 +24,13 @@ export type TopicDiagram = {
 };
 
 export type TopicLab = {
-  type: "sampling-quantization" | "listening-metrics" | "microphone" | "codec-hardware" | "digital-interface";
+  type:
+    | "sampling-quantization"
+    | "listening-metrics"
+    | "microphone"
+    | "codec-hardware"
+    | "digital-interface"
+    | "amplifier-speaker";
   title: LocalizedText;
   description: LocalizedText;
   buttonLabel: LocalizedText;
@@ -740,21 +746,76 @@ export const categories: Category[] = [
         ],
         detail: {
           explanation: {
-            zh: "功放负责把音频信号放大到能驱动扬声器的功率，扬声器再把电能转换成机械振动和空气声波。实际声音表现同时受功放效率、扬声器单元、箱体结构、分频和保护算法影响。",
-            en: "An amplifier raises an audio signal to a power level that can drive a speaker, and the speaker converts electrical energy into mechanical motion and sound waves. The result depends on amplifier efficiency, driver design, enclosure, crossover, and protection algorithms."
+            zh: "功放负责把 DAC、Codec 或前级输出的小信号变成能推动扬声器的电压、电流和功率；扬声器再把电能转换成振膜运动和空气声波。实际听感不是由某一个参数决定，而是由功放类型、输出能力、扬声器单元、箱体、分频、保护算法和声学结构共同决定。",
+            en: "An amplifier turns the small signal from a DAC, codec, or preamp into voltage, current, and power that can drive a speaker. The speaker then turns electrical energy into diaphragm motion and air pressure. The listening result depends on amplifier class, output capability, driver design, enclosure, crossover, protection, and acoustics together."
           },
           keyConcepts: [
-            { zh: "Class D 功放效率高，适合电池供电和小体积设备，但布局和滤波仍然重要。", en: "Class D amplifiers are efficient for battery-powered and compact devices, but layout and filtering still matter." },
-            { zh: "阻抗、灵敏度和功率共同决定可达到的声压和热负载。", en: "Impedance, sensitivity, and power together determine achievable sound pressure and thermal load." },
-            { zh: "箱体容积、出音孔和结构密封会显著影响低频和失真。", en: "Enclosure volume, vents, and sealing strongly affect bass response and distortion." }
+            { zh: "功放要提供足够电压摆幅和电流能力；电源电压、负载阻抗、散热和保护策略会限制最大输出。", en: "An amplifier needs enough voltage swing and current capability; supply voltage, load impedance, heat, and protection limit maximum output." },
+            { zh: "Class A 线性好但效率低，Class AB 是传统折中方案，Class D 通过开关/PWM 工作，效率高但需要关注滤波、布局和 EMI。", en: "Class A is linear but inefficient, Class AB is a traditional compromise, and Class D uses switching/PWM for high efficiency while requiring care with filtering, layout, and EMI." },
+            { zh: "扬声器的音圈在磁场中受力，推动振膜往复运动；行程、热容量和机械结构决定它能承受多大声压和低频。", en: "A speaker voice coil moves in a magnetic field and drives the diaphragm; excursion, thermal capacity, and mechanics determine sound pressure and bass limits." },
+            { zh: "阻抗越低，同电压下电流越大，对功放输出级和散热要求越高。", en: "Lower impedance draws more current at the same voltage, increasing amplifier output-stage and thermal demands." },
+            { zh: "灵敏度、功率、箱体和分频共同决定实际响度；瓦数更大不等于一定更响或更好听。", en: "Sensitivity, power, enclosure, and crossover jointly determine loudness; more watts do not guarantee louder or better sound." }
           ],
+          termExplanations: [
+            {
+              name: { zh: "功放是什么", en: "What an amplifier does" },
+              explanation: {
+                zh: "功放把小信号变成可驱动负载的功率输出。它需要处理增益、电源电压、输出电流、效率、散热、削波和保护。",
+                en: "An amplifier turns a small signal into power output for a load. It must handle gain, supply voltage, output current, efficiency, heat, clipping, and protection."
+              }
+            },
+            {
+              name: { zh: "Class A / AB / D", en: "Class A / AB / D" },
+              explanation: {
+                zh: "Class A 器件几乎一直导通，线性好但耗电；Class AB 让正负半周分担输出；Class D 把信号调制成高速开关脉冲，再由负载和滤波恢复为音频。",
+                en: "Class A devices conduct most of the time, Class AB splits positive and negative halves, and Class D modulates audio into fast switching pulses before filtering through the load."
+              }
+            },
+            {
+              name: { zh: "动圈扬声器", en: "Moving-coil speaker" },
+              explanation: {
+                zh: "动圈单元由音圈、磁路、振膜、悬边和定心支片组成。音圈中的电流在磁场里产生力，带动振膜推动空气。",
+                en: "A moving-coil driver has a voice coil, magnetic circuit, diaphragm, surround, and spider. Current in the coil creates force in the magnetic field and moves air."
+              }
+            },
+            {
+              name: { zh: "阻抗", en: "Impedance" },
+              explanation: {
+                zh: "阻抗不是固定电阻，而是随频率变化的交流负载。标称 4 Ω、8 Ω 只是参考值，真实曲线会影响功放电流和控制力。",
+                en: "Impedance is a frequency-dependent AC load, not a fixed resistor. Nominal 4 ohm or 8 ohm values are references; the real curve affects current and control."
+              }
+            },
+            {
+              name: { zh: "灵敏度", en: "Sensitivity" },
+              explanation: {
+                zh: "灵敏度描述扬声器在给定输入下能产生多大声压。高灵敏度单元在同样功率下更容易响，但频响、失真和体积仍要一起看。",
+                en: "Sensitivity describes sound pressure for a given input. Higher sensitivity gets louder with the same power, but frequency response, distortion, and size still matter."
+              }
+            },
+            {
+              name: { zh: "分频器", en: "Crossover" },
+              explanation: {
+                zh: "分频器把低频、中频和高频送给适合的单元。分频点、斜率、相位和单元摆位都会影响衔接和声像。",
+                en: "A crossover sends bass, midrange, and treble to suitable drivers. Crossover point, slope, phase, and driver placement affect integration and imaging."
+              }
+            }
+          ],
+          lab: {
+            type: "amplifier-speaker",
+            title: { zh: "功放与扬声器实验室", en: "Amplifier and Speaker Lab" },
+            description: {
+              zh: "进入独立界面观察小信号、功放、分频/保护、扬声器单元和空气声波之间的关系，并试听削波、谐波失真、低频不足、箱体共振和动态保护。",
+              en: "Open an independent lab to inspect the path from small signal to amplifier, crossover/protection, speaker driver, and air pressure, then audition clipping, harmonic distortion, bass loss, enclosure resonance, and limiting."
+            },
+            buttonLabel: { zh: "打开功放与扬声器实验室", en: "Open amplifier and speaker lab" }
+          },
           misconception: {
-            zh: "瓦数更大不等于一定更响或更好听；扬声器效率、散热、失真控制和保护策略同样重要。",
-            en: "More watts do not guarantee louder or better sound; speaker efficiency, heat, distortion control, and protection strategy matter as well."
+            zh: "瓦数更大不等于一定更响或更好听；阻抗、灵敏度、箱体、失真、散热、保护和摆放都会影响最终声音。",
+            en: "More watts do not guarantee louder or better sound; impedance, sensitivity, enclosure, distortion, heat, protection, and placement all shape the result."
           },
           contentDirection: {
-            zh: "适合做 Class D 工作原理图、小音箱声学限制案例和 TWS 耳机播放链路拆解。",
-            en: "This fits a Class D explainer, small-speaker acoustic limitation case study, and TWS earbud playback-chain breakdown."
+            zh: "适合继续扩展为 Class D 工作原理图、扬声器结构动画、箱体/分频案例、小音箱保护算法和真实产品播放链路拆解。",
+            en: "This can expand into Class D diagrams, speaker-structure animation, enclosure/crossover cases, small-speaker protection, and real product playback-chain breakdowns."
           }
         }
       }
