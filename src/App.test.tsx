@@ -570,11 +570,43 @@ describe("Audio knowledge app", () => {
       })
     );
 
+    const effectDetails = [
+      {
+        label: "削波失真",
+        detailPattern: /波形峰值被硬性压平/
+      },
+      {
+        label: "谐波失真",
+        detailPattern: /原本只有一个频率的信号/
+      },
+      {
+        label: "低频不足",
+        detailPattern: /低频音量和下潜明显变少/
+      },
+      {
+        label: "箱体共振",
+        detailPattern: /某一小段频率被箱体或结构放大/
+      },
+      {
+        label: "动态保护 / 限幅",
+        detailPattern: /大动态或大音量时峰值被自动压低/
+      }
+    ];
+    const detailSectionLabels = ["现象", "原因", "听感", "常见场景", "改善方式"];
+
     expect(screen.getByRole("button", { name: "削波失真" })).toHaveAttribute("aria-pressed", "true");
+    for (const effect of effectDetails) {
+      await user.click(screen.getByRole("button", { name: `查看${effect.label}说明` }));
+      const effectDialog = screen.getByRole("dialog", { name: `${effect.label}说明` });
+      detailSectionLabels.forEach((sectionLabel) => {
+        expect(within(effectDialog).getByRole("heading", { name: sectionLabel })).toBeInTheDocument();
+      });
+      expect(within(effectDialog).getByText(effect.detailPattern)).toBeInTheDocument();
+      await user.click(within(effectDialog).getByRole("button", { name: "关闭说明" }));
+    }
+
     await user.click(screen.getByRole("button", { name: "查看削波失真说明" }));
     const clippingDialog = screen.getByRole("dialog", { name: "削波失真说明" });
-    expect(clippingDialog).toBeInTheDocument();
-    expect(screen.getByText(/波形超过功放或数字链路允许范围/)).toBeInTheDocument();
     expect(within(clippingDialog).getByRole("button", { name: "关闭说明" })).toHaveFocus();
     fireEvent.keyDown(window, { key: "Escape" });
     expect(screen.queryByRole("dialog", { name: "削波失真说明" })).not.toBeInTheDocument();

@@ -7,6 +7,14 @@ type DiagramMode = "amplifier" | "speaker" | "enclosure" | "matching";
 type AmpClass = "class-a" | "class-ab" | "class-d";
 type EffectMode = "clipping" | "harmonics" | "bass-loss" | "cabinet-resonance" | "limiter";
 
+type EffectDetail = {
+  phenomenon: string;
+  cause: string;
+  sound: string;
+  scenario: string;
+  fix: string;
+};
+
 type PlaybackHandle = {
   stop: () => void;
 };
@@ -59,7 +67,7 @@ const effects: Array<{
   id: EffectMode;
   label: Record<Language, string>;
   description: Record<Language, string>;
-  detail: Record<Language, { cause: string; sound: string; fix: string }>;
+  detail: Record<Language, EffectDetail>;
 }> = [
   {
     id: "clipping",
@@ -67,13 +75,17 @@ const effects: Array<{
     description: { zh: "波峰被压平，声音变硬、刺耳。", en: "Peaks flatten, making sound hard and harsh." },
     detail: {
       zh: {
+        phenomenon: "波形峰值被硬性压平，原本圆滑的瞬态变成平顶。",
         cause: "波形超过功放或数字链路允许范围，输出无法继续跟随输入。",
         sound: "听感常见为刺耳、粗糙、瞬态发毛，严重时像破音。",
+        scenario: "大音量播放、前级增益过高、低阻抗负载或电池供电余量不足时更常见。",
         fix: "降低增益、提高供电余量、换更合适的功放/扬声器匹配或启用软限幅。"
       },
       en: {
+        phenomenon: "Waveform peaks are flattened, turning smooth transients into clipped plateaus.",
         cause: "The waveform exceeds the amplifier or digital path headroom, so output can no longer follow input.",
         sound: "It sounds harsh, rough, and broken on peaks.",
+        scenario: "Common at high volume, excessive upstream gain, low-impedance loads, or limited battery headroom.",
         fix: "Reduce gain, improve headroom, match amplifier and speaker, or use soft limiting."
       }
     }
@@ -84,13 +96,17 @@ const effects: Array<{
     description: { zh: "非线性产生额外倍频成分。", en: "Nonlinearity adds extra multiples of the tone." },
     detail: {
       zh: {
+        phenomenon: "原本只有一个频率的信号，会多出二次、三次等倍频成分。",
         cause: "功放输出级、扬声器悬边、磁路或振膜在大信号下不再完全线性。",
         sound: "少量低阶谐波可能只觉得变厚，过多会变浑、变脏或刺耳。",
+        scenario: "功放接近最大输出、扬声器大行程运动、低频重放或单元老化时更明显。",
         fix: "降低工作强度、优化单元和箱体、使用失真更低的功放或保护曲线。"
       },
       en: {
+        phenomenon: "A tone gains added second, third, and higher harmonic components.",
         cause: "The amplifier stage or speaker mechanics become nonlinear at higher levels.",
         sound: "Small low-order harmonics can sound thicker; too much sounds dirty or harsh.",
+        scenario: "More obvious near maximum output, with large driver excursion, heavy bass, or worn drivers.",
         fix: "Reduce level, improve driver/enclosure design, or use a lower-distortion amplifier/protection curve."
       }
     }
@@ -101,13 +117,17 @@ const effects: Array<{
     description: { zh: "低频被削弱，声音变薄。", en: "Bass is reduced and the sound becomes thin." },
     detail: {
       zh: {
+        phenomenon: "低频音量和下潜明显变少，频响在低端提前衰减。",
         cause: "小扬声器振膜面积、行程和箱体容积有限，低频无法产生足够声压。",
         sound: "鼓和贝斯缺少重量，人声可能偏薄。",
+        scenario: "手机、平板、轻薄电视、小型蓝牙音箱或箱体漏气时常见。",
         fix: "增大单元/箱体、改善密封和倒相设计，或用 DSP 在安全范围内补偿。"
       },
       en: {
+        phenomenon: "Bass level and extension drop, with the low end rolling off early.",
         cause: "Small drivers have limited area, excursion, and enclosure volume, so bass SPL is limited.",
         sound: "Kick and bass lose weight; voices may sound thin.",
+        scenario: "Common in phones, tablets, thin TVs, small Bluetooth speakers, or leaky enclosures.",
         fix: "Use a larger driver/enclosure, improve sealing or porting, or apply DSP within safe limits."
       }
     }
@@ -118,13 +138,17 @@ const effects: Array<{
     description: { zh: "某一段频率被突出，出现嗡、闷或箱声。", en: "A narrow band is emphasized, causing boom or boxiness." },
     detail: {
       zh: {
+        phenomenon: "某一小段频率被箱体或结构放大，频响出现窄峰。",
         cause: "箱体、腔体、出音孔或结构件在某个频率附近发生共振。",
         sound: "声音有明显嗡声、闷声或某个音总是特别突出。",
+        scenario: "塑料外壳、小体积腔体、桌面反射、倒相孔调谐不当或装配松动时常见。",
         fix: "优化箱体容积、加强结构、加入吸音材料、调整 EQ 或分频。"
       },
       en: {
+        phenomenon: "A narrow frequency band is boosted by the enclosure or structure.",
         cause: "The enclosure, cavity, vent, or mechanical parts resonate around a frequency.",
         sound: "The sound becomes boomy, boxy, or dominated by one note.",
+        scenario: "Common with plastic housings, small cavities, desk reflections, mistuned ports, or loose assembly.",
         fix: "Adjust volume, stiffening, damping, EQ, or crossover design."
       }
     }
@@ -135,13 +159,17 @@ const effects: Array<{
     description: { zh: "峰值被压低，避免破音、过热或过行程。", en: "Peaks are reduced to avoid clipping, heat, or over-excursion." },
     detail: {
       zh: {
+        phenomenon: "大动态或大音量时峰值被自动压低，整体响度可能忽高忽低。",
         cause: "小音箱或便携设备为了保护扬声器和功放，会在大音量时压低峰值。",
         sound: "声音变稳但动态变小，鼓点和瞬态可能不够冲。",
+        scenario: "便携音箱、手机外放、电视内置扬声器和长时间高音量播放时常见。",
         fix: "优化保护参数、提升硬件余量，或降低目标响度。"
       },
       en: {
+        phenomenon: "Peaks are automatically reduced at high level, sometimes making loudness pump.",
         cause: "Small speakers or portable devices reduce peaks to protect the driver and amplifier.",
         sound: "The sound is safer but less dynamic; transients lose impact.",
+        scenario: "Common in portable speakers, phone speakers, TV speakers, and sustained loud playback.",
         fix: "Tune protection, increase hardware headroom, or reduce target loudness."
       }
     }
@@ -564,7 +592,7 @@ export function AmplifierSpeakerLab({ language, onBack }: AmplifierSpeakerLabPro
         {chainLabels[language].map((label, index) => (
           <div className="amp-chain-node" key={label}>
             <span>{label}</span>
-            {index < chainLabels[language].length - 1 ? <strong aria-hidden="true">→</strong> : null}
+            {index < chainLabels[language].length - 1 ? <span aria-hidden="true" className="amp-chain-arrow">→</span> : null}
           </div>
         ))}
       </section>
@@ -669,9 +697,40 @@ export function AmplifierSpeakerLab({ language, onBack }: AmplifierSpeakerLabPro
             onClick={(event) => event.stopPropagation()}
           >
             <h2>{activeInfoEffect.label[language]}</h2>
-            <p>{activeInfoEffect.detail[language].cause}</p>
-            <p>{activeInfoEffect.detail[language].sound}</p>
-            <p>{activeInfoEffect.detail[language].fix}</p>
+            <div className="effect-modal-sections">
+              {[
+                {
+                  key: "phenomenon",
+                  label: language === "zh" ? "现象" : "Phenomenon",
+                  copy: activeInfoEffect.detail[language].phenomenon
+                },
+                {
+                  key: "cause",
+                  label: language === "zh" ? "原因" : "Cause",
+                  copy: activeInfoEffect.detail[language].cause
+                },
+                {
+                  key: "sound",
+                  label: language === "zh" ? "听感" : "Sound",
+                  copy: activeInfoEffect.detail[language].sound
+                },
+                {
+                  key: "scenario",
+                  label: language === "zh" ? "常见场景" : "Common scenario",
+                  copy: activeInfoEffect.detail[language].scenario
+                },
+                {
+                  key: "fix",
+                  label: language === "zh" ? "改善方式" : "How to improve",
+                  copy: activeInfoEffect.detail[language].fix
+                }
+              ].map((section) => (
+                <section className="effect-modal-section" key={section.key}>
+                  <h3>{section.label}</h3>
+                  <p>{section.copy}</p>
+                </section>
+              ))}
+            </div>
             <button ref={closeInfoButtonRef} type="button" onClick={() => setActiveInfo(null)}>
               {language === "zh" ? "关闭说明" : "Close details"}
             </button>

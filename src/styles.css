@@ -1240,10 +1240,11 @@ body.details-open {
   padding: 12px 14px;
 }
 
-.amp-chain-node strong {
+.amp-chain-arrow {
   color: #7ee7d8;
   flex: 0 0 auto;
   font-size: 1.2rem;
+  font-weight: 840;
   line-height: 1;
 }
 
@@ -1735,6 +1736,26 @@ body.details-open {
 }
 
 .effect-modal p {
+  margin: 0;
+}
+
+.effect-modal-sections {
+  display: grid;
+  gap: 12px;
+}
+
+.effect-modal-section {
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 8px;
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+}
+
+.effect-modal-section h3 {
+  color: #7ee7d8;
+  font-size: 0.92rem;
   margin: 0;
 }
 
@@ -2792,6 +2813,15 @@ body.details-open {
   .listening-metric-cards,
   .metric-modal-grid {
     grid-template-columns: 1fr;
+  }
+
+  .amp-chain-arrow {
+    font-size: 0;
+  }
+
+  .amp-chain-arrow::before {
+    content: "↓";
+    font-size: 1.2rem;
   }
 
   .diagram-open-button,
