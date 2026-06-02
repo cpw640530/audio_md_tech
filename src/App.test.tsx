@@ -495,53 +495,69 @@ describe("Audio knowledge app", () => {
       stop: ReturnType<typeof vi.fn>;
       frequency: { setValueAtTime: ReturnType<typeof vi.fn> };
       type: OscillatorType;
+      contextIndex: number;
     }> = [];
-    const audioContext = {
-      currentTime: 0,
-      destination: {},
-      createOscillator: vi.fn(() => {
-        const oscillator = {
-          connect: vi.fn(),
-          start: vi.fn(),
-          stop: vi.fn(),
-          frequency: { setValueAtTime: vi.fn() },
-          type: "sine" as OscillatorType
-        };
-        createdOscillators.push(oscillator);
-        return oscillator;
-      }),
-      createGain: vi.fn(() => ({
-        connect: vi.fn(),
-        gain: {
-          setValueAtTime: vi.fn(),
-          linearRampToValueAtTime: vi.fn()
-        }
-      })),
-      createWaveShaper: vi.fn(() => ({
-        connect: vi.fn(),
-        curve: null as Float32Array | null,
-        oversample: "none" as OverSampleType
-      })),
-      createBiquadFilter: vi.fn(() => ({
-        connect: vi.fn(),
-        frequency: { setValueAtTime: vi.fn() },
-        gain: { setValueAtTime: vi.fn() },
-        Q: { setValueAtTime: vi.fn() },
-        type: "lowpass" as BiquadFilterType
-      })),
-      createDynamicsCompressor: vi.fn(() => ({
-        connect: vi.fn(),
-        threshold: { setValueAtTime: vi.fn() },
-        knee: { setValueAtTime: vi.fn() },
-        ratio: { setValueAtTime: vi.fn() },
-        attack: { setValueAtTime: vi.fn() },
-        release: { setValueAtTime: vi.fn() }
-      })),
-      close: vi.fn()
-    };
+    const createdContexts: Array<{
+      currentTime: number;
+      destination: object;
+      createOscillator: ReturnType<typeof vi.fn>;
+      createGain: ReturnType<typeof vi.fn>;
+      createWaveShaper: ReturnType<typeof vi.fn>;
+      createBiquadFilter: ReturnType<typeof vi.fn>;
+      createDynamicsCompressor: ReturnType<typeof vi.fn>;
+      close: ReturnType<typeof vi.fn>;
+    }> = [];
     Object.defineProperty(window, "AudioContext", {
       configurable: true,
-      value: vi.fn(() => audioContext)
+      value: vi.fn(() => {
+        const contextIndex = createdContexts.length;
+        const audioContext = {
+          currentTime: 0,
+          destination: {},
+          createOscillator: vi.fn(() => {
+            const oscillator = {
+              connect: vi.fn(),
+              start: vi.fn(),
+              stop: vi.fn(),
+              frequency: { setValueAtTime: vi.fn() },
+              type: "sine" as OscillatorType,
+              contextIndex
+            };
+            createdOscillators.push(oscillator);
+            return oscillator;
+          }),
+          createGain: vi.fn(() => ({
+            connect: vi.fn(),
+            gain: {
+              setValueAtTime: vi.fn(),
+              linearRampToValueAtTime: vi.fn()
+            }
+          })),
+          createWaveShaper: vi.fn(() => ({
+            connect: vi.fn(),
+            curve: null as Float32Array | null,
+            oversample: "none" as OverSampleType
+          })),
+          createBiquadFilter: vi.fn(() => ({
+            connect: vi.fn(),
+            frequency: { setValueAtTime: vi.fn() },
+            gain: { setValueAtTime: vi.fn() },
+            Q: { setValueAtTime: vi.fn() },
+            type: "lowpass" as BiquadFilterType
+          })),
+          createDynamicsCompressor: vi.fn(() => ({
+            connect: vi.fn(),
+            threshold: { setValueAtTime: vi.fn() },
+            knee: { setValueAtTime: vi.fn() },
+            ratio: { setValueAtTime: vi.fn() },
+            attack: { setValueAtTime: vi.fn() },
+            release: { setValueAtTime: vi.fn() }
+          })),
+          close: vi.fn()
+        };
+        createdContexts.push(audioContext);
+        return audioContext;
+      })
     });
 
     const user = userEvent.setup();
@@ -556,29 +572,52 @@ describe("Audio knowledge app", () => {
 
     expect(screen.getByRole("button", { name: "削波失真" })).toHaveAttribute("aria-pressed", "true");
     await user.click(screen.getByRole("button", { name: "查看削波失真说明" }));
-    expect(screen.getByRole("dialog", { name: "削波失真说明" })).toBeInTheDocument();
+    const clippingDialog = screen.getByRole("dialog", { name: "削波失真说明" });
+    expect(clippingDialog).toBeInTheDocument();
     expect(screen.getByText(/波形超过功放或数字链路允许范围/)).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: "关闭说明" }));
+    expect(within(clippingDialog).getByRole("button", { name: "关闭说明" })).toHaveFocus();
+    fireEvent.keyDown(window, { key: "Escape" });
+    expect(screen.queryByRole("dialog", { name: "削波失真说明" })).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "查看削波失真说明" }));
+    const reopenedClippingDialog = screen.getByRole("dialog", { name: "削波失真说明" });
+    fireEvent.click(reopenedClippingDialog);
+    expect(screen.getByRole("dialog", { name: "削波失真说明" })).toBeInTheDocument();
+    fireEvent.click(reopenedClippingDialog.parentElement as HTMLElement);
+    expect(screen.queryByRole("dialog", { name: "削波失真说明" })).not.toBeInTheDocument();
 
     fireEvent.change(screen.getByRole("slider", { name: "效果强度" }), {
       target: { value: "82" }
     });
     await user.click(screen.getByRole("button", { name: "播放音效" }));
-    expect(audioContext.createWaveShaper).toHaveBeenCalled();
+    expect(createdContexts[0].createWaveShaper).toHaveBeenCalled();
     expect(createdOscillators[0]?.start).toHaveBeenCalledWith(0);
     expect(screen.getByText("播放中")).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "谐波失真" }));
     expect(createdOscillators[0]?.stop).toHaveBeenCalled();
+    expect(createdContexts[0].close).toHaveBeenCalled();
     expect(screen.getByText("已停止")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "播放音效" }));
+    const harmonicOscillators = createdOscillators.filter((oscillator) => oscillator.contextIndex === 1);
+    expect(harmonicOscillators).toHaveLength(3);
+    harmonicOscillators.forEach((oscillator) => {
+      expect(oscillator.start).toHaveBeenCalledWith(0);
+    });
+    expect(screen.getByText("播放中")).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "箱体共振" }));
+    harmonicOscillators.forEach((oscillator) => {
+      expect(oscillator.stop).toHaveBeenCalled();
+    });
+    expect(createdContexts[1].close).toHaveBeenCalled();
+    expect(screen.getByText("已停止")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "播放音效" }));
-    expect(audioContext.createBiquadFilter).toHaveBeenCalled();
+    expect(createdContexts[2].createBiquadFilter).toHaveBeenCalled();
 
     await user.click(screen.getByRole("button", { name: "动态保护 / 限幅" }));
     await user.click(screen.getByRole("button", { name: "播放音效" }));
-    expect(audioContext.createDynamicsCompressor).toHaveBeenCalled();
+    expect(createdContexts[3].createDynamicsCompressor).toHaveBeenCalled();
   });
 
   it("places digital audio interfaces as a separate hardware topic", async () => {

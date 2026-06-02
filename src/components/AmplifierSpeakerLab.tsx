@@ -473,6 +473,8 @@ export function AmplifierSpeakerLab({ language, onBack }: AmplifierSpeakerLabPro
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioUnsupported, setAudioUnsupported] = useState(false);
   const playbackRef = useRef<PlaybackHandle | null>(null);
+  const closeInfoButtonRef = useRef<HTMLButtonElement | null>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
 
   const activeInfoEffect = activeInfo ? effects.find((effect) => effect.id === activeInfo) : null;
 
@@ -511,6 +513,29 @@ export function AmplifierSpeakerLab({ language, onBack }: AmplifierSpeakerLabPro
       playbackRef.current = null;
     };
   }, []);
+
+  useEffect(() => {
+    if (!activeInfoEffect) {
+      return;
+    }
+
+    previousFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    closeInfoButtonRef.current?.focus();
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setActiveInfo(null);
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      previousFocusRef.current?.focus();
+      previousFocusRef.current = null;
+    };
+  }, [activeInfoEffect]);
 
   return (
     <main className="codec-lab-page amp-lab">
@@ -635,18 +660,19 @@ export function AmplifierSpeakerLab({ language, onBack }: AmplifierSpeakerLabPro
       </section>
 
       {activeInfoEffect ? (
-        <div className="effect-modal-layer">
+        <div className="effect-modal-layer" onClick={() => setActiveInfo(null)}>
           <section
             aria-label={`${activeInfoEffect.label[language]}${language === "zh" ? "说明" : " details"}`}
             aria-modal="true"
             className="effect-modal"
             role="dialog"
+            onClick={(event) => event.stopPropagation()}
           >
             <h2>{activeInfoEffect.label[language]}</h2>
             <p>{activeInfoEffect.detail[language].cause}</p>
             <p>{activeInfoEffect.detail[language].sound}</p>
             <p>{activeInfoEffect.detail[language].fix}</p>
-            <button type="button" onClick={() => setActiveInfo(null)}>
+            <button ref={closeInfoButtonRef} type="button" onClick={() => setActiveInfo(null)}>
               {language === "zh" ? "关闭说明" : "Close details"}
             </button>
           </section>
