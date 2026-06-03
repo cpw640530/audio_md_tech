@@ -51,6 +51,10 @@ It is designed for:
 
 ## Quick Start
 
+Visit the published website:
+
+- [https://cpw640530.github.io/audio_md_tech/](https://cpw640530.github.io/audio_md_tech/)
+
 Start from the main knowledge outline:
 
 - [Audio Technology Knowledge Outline](docs/audio_technology_knowledge_outline.md)
@@ -110,6 +114,7 @@ The current outline is intended to evolve into these web content modules:
 - [x] Create the first audio technology knowledge outline.
 - [x] Add bilingual README entry points.
 - [x] Build the first React/Vite knowledge-base web app.
+- [x] Publish the web app with GitHub Pages.
 - [ ] Split the outline into website-ready topic pages.
 - [ ] Add diagrams for signal chains, spectrograms, and algorithm flows.
 - [ ] Expand each topic using a consistent article template.

@@ -51,6 +51,10 @@
 
 ## 快速开始
 
+在线访问网页：
+
+- [https://cpw640530.github.io/audio_md_tech/](https://cpw640530.github.io/audio_md_tech/)
+
 先从主知识大纲开始阅读：
 
 - [音频技术科普知识大纲](../docs/audio_technology_knowledge_outline.md)
@@ -110,6 +114,7 @@ npm run build
 - [x] 创建第一版音频技术知识大纲。
 - [x] 增加双语 README 入口。
 - [x] 搭建第一版 React/Vite 知识库网页应用。
+- [x] 使用 GitHub Pages 发布网页应用。
 - [ ] 将大纲拆分为适合网页展示的专题页面。
 - [ ] 增加信号链路、频谱图和算法流程图。
 - [ ] 使用统一文章模板扩展每个主题。
