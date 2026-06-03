@@ -30,7 +30,8 @@ export type TopicLab = {
     | "microphone"
     | "codec-hardware"
     | "digital-interface"
-    | "amplifier-speaker";
+    | "amplifier-speaker"
+    | "system-audio";
   title: LocalizedText;
   description: LocalizedText;
   buttonLabel: LocalizedText;
@@ -834,31 +835,85 @@ export const categories: Category[] = [
       {
         title: { zh: "系统音频架构", en: "System Audio Architecture" },
         summary: {
-          zh: "梳理 ALSA、PipeWire、AudioFlinger、Core Audio、WASAPI 等系统音频角色。",
-          en: "Map the roles of ALSA, PipeWire, AudioFlinger, Core Audio, WASAPI, and other system audio layers."
+          zh: "先建立通用系统音频链路，再用 Linux ALSA、PipeWire 和 ASoC 作为具体例子。",
+          en: "Build a generic system audio path first, then use Linux ALSA, PipeWire, and ASoC as concrete examples."
         },
         bullets: [
-          { zh: "驱动与系统音频服务", en: "Drivers and system audio services" },
-          { zh: "采集链路和播放链路", en: "Capture and playback chains" },
-          { zh: "全双工音频", en: "Full-duplex audio" }
+          { zh: "应用层 API、音频服务和策略路由", en: "Application APIs, audio service, and policy routing" },
+          { zh: "采集链路、播放链路和全双工同步", en: "Capture, playback, and full-duplex synchronization" },
+          { zh: "设备管理、混音路径、HAL 和驱动边界", en: "Device management, mixing paths, HAL, and driver boundaries" }
         ],
         detail: {
           explanation: {
-            zh: "系统音频架构连接应用、系统服务、驱动和硬件。它负责权限、路由、混音、重采样、音量控制、设备切换和全双工同步，是音频应用能稳定运行的基础。",
-            en: "System audio architecture connects applications, system services, drivers, and hardware. It handles permissions, routing, mixing, resampling, volume control, device switching, and full-duplex synchronization, forming the foundation for stable audio apps."
+            zh: "系统音频架构不是单个模块，而是一条从应用、媒体框架、系统音频服务、策略路由、混音路径、HAL/驱动到硬件设备的完整链路。它负责把多个应用的播放请求、麦克风采集、蓝牙/USB/内置声卡切换、权限与隐私、音量和设备状态统一协调起来。",
+            en: "System audio architecture is not a single module; it is the complete path from applications, media frameworks, system audio services, policy routing, mixing paths, HAL/drivers, and hardware devices. It coordinates playback requests, microphone capture, Bluetooth/USB/built-in devices, permissions, privacy, volume, and device state."
           },
           keyConcepts: [
-            { zh: "ALSA、AudioFlinger、Core Audio、WASAPI 等分别代表不同系统中的音频层次。", en: "ALSA, AudioFlinger, Core Audio, WASAPI, and similar systems represent audio layers on different platforms." },
-            { zh: "音频路由决定数据进入扬声器、耳机、蓝牙还是虚拟设备。", en: "Audio routing decides whether data goes to speakers, headphones, Bluetooth, or virtual devices." },
-            { zh: "混音和重采样会改变延迟和 CPU 占用，也可能影响质量。", en: "Mixing and resampling affect latency and CPU usage and can also influence quality." }
+            { zh: "播放链路通常从 App 输出音频流，经过系统服务、音量、混音路径和设备路由后进入驱动与硬件。", en: "Playback usually starts from an app stream, then goes through service management, volume, mixing paths, device routing, drivers, and hardware." },
+            { zh: "录音链路从麦克风和 ADC 进入驱动，再经过权限、输入路由、设备选择和时间戳管理后交给应用。", en: "Capture starts at the microphone and ADC, then passes through drivers, permissions, input routing, device selection, and timestamp management before reaching apps." },
+            { zh: "全双工语音同时存在采集和回放，系统层负责把回放参考、采集流和语音处理模块接在正确位置。", en: "Full-duplex voice runs capture and playback together; the system layer connects playback reference, capture stream, and voice-processing modules at the right points." },
+            { zh: "低延迟在系统架构中只表现为可选择的专用路径或设备能力，本卡不展开具体调参。", en: "In system architecture, low latency appears only as selectable paths or device capability; this card does not expand tuning details." }
           ],
+          termExplanations: [
+            {
+              name: { zh: "应用层 API", en: "Application API" },
+              explanation: {
+                zh: "应用通常通过 AudioTrack、AAudio、OpenSL ES、Core Audio、WASAPI、WebAudio 等 API 提交或获取音频数据。API 会把应用请求交给系统音频栈，并完成基本的格式、设备和会话协商。",
+                en: "Apps usually submit or receive audio through APIs such as AudioTrack, AAudio, OpenSL ES, Core Audio, WASAPI, or WebAudio. The API hands app requests to the system audio stack and negotiates basic format, device, and session properties."
+              }
+            },
+            {
+              name: { zh: "音频服务", en: "Audio service" },
+              explanation: {
+                zh: "音频服务是系统里的集中管理层。在 Linux 中常见为 PipeWire、PulseAudio 或 JACK，负责管理多个客户端、混音路径、设备状态和数据搬运。",
+                en: "The audio service is the central manager. On Linux it is commonly PipeWire, PulseAudio, or JACK, managing clients, mixing paths, device state, and data movement."
+              }
+            },
+            {
+              name: { zh: "音频策略与路由", en: "Audio policy and routing" },
+              explanation: {
+                zh: "策略层决定声音应该走扬声器、听筒、耳机、蓝牙、USB 声卡还是虚拟设备，也处理来电、通知、媒体、语音助手之间的优先级和音频焦点。",
+                en: "The policy layer decides whether audio goes to speaker, earpiece, headphones, Bluetooth, USB audio, or virtual devices, and handles priority and focus among calls, notifications, media, and voice assistants."
+              }
+            },
+            {
+              name: { zh: "混音器与重采样", en: "Mixer and resampler" },
+              explanation: {
+                zh: "当多个应用同时播放，系统会把不同流汇入目标输出路径。混音和重采样在这里作为系统职责出现，本卡只说明它们位于哪一层。",
+                en: "When multiple apps play at once, the system merges streams into the target output path. Mixing and resampling appear here as system responsibilities; this card only shows where they sit."
+              }
+            },
+            {
+              name: { zh: "HAL / 驱动", en: "HAL / driver" },
+              explanation: {
+                zh: "HAL 和驱动把系统抽象命令转换成具体硬件操作，例如配置 I2S/TDM、Codec 寄存器、DMA 通道、蓝牙音频通道或 USB Audio 端点。",
+                en: "HAL and drivers translate system abstractions into hardware operations, such as configuring I2S/TDM, codec registers, DMA channels, Bluetooth audio paths, or USB Audio endpoints."
+              }
+            },
+            {
+              name: { zh: "低延迟通路入口", en: "Low-latency path entry" },
+              explanation: {
+                zh: "系统架构层只说明低延迟请求会走哪条输出或输入路径，以及哪些设备支持该路径。具体实时调参不在本卡展开。",
+                en: "At the architecture layer, low latency only describes which input or output path is selected and which devices support it. Detailed real-time tuning is outside this card."
+              }
+            }
+          ],
+          lab: {
+            type: "system-audio",
+            title: { zh: "系统音频架构实验室", en: "System Audio Architecture Lab" },
+            description: {
+              zh: "进入独立界面切换播放链路、录音链路和全双工语音链路，观察 App、音频服务、策略路由、混音/重采样、HAL/驱动与硬件之间如何协作。",
+              en: "Open an independent lab to switch between playback, capture, and full-duplex voice paths, and inspect how apps, audio services, policy routing, mixing/resampling, HAL/drivers, and hardware work together."
+            },
+            buttonLabel: { zh: "打开系统音频架构实验室", en: "Open system audio architecture lab" }
+          },
           misconception: {
-            zh: "应用通常不是直接把数据写到扬声器，而是经过系统音频服务、驱动和硬件接口，任何一层都可能影响延迟和稳定性。",
-            en: "Applications usually do not write directly to speakers; audio passes through system services, drivers, and hardware interfaces, and each layer can affect latency and stability."
+            zh: "应用通常不是直接把数据写到扬声器，也不是直接从麦克风读到最终数据；系统会在中间做权限、策略、混音、重采样、设备路由和硬件适配。",
+            en: "Applications usually do not write directly to speakers or read final microphone data directly; the system sits in between for permissions, policy, mixing, resampling, device routing, and hardware adaptation."
           },
           contentDirection: {
-            zh: "适合做跨平台音频栈分层图，并用录音、播放、蓝牙输出三个流程展示数据如何流动。",
-            en: "This can become a cross-platform audio stack diagram with capture, playback, and Bluetooth-output flows."
+            zh: "适合继续扩展为桌面 Linux 与嵌入式 Linux 的分层对比图，也可以后续再加入 Android AudioFlinger、Windows WASAPI、macOS Core Audio 的系统级对比。",
+            en: "This can expand into desktop Linux versus embedded Linux layered comparisons, and later compare Android AudioFlinger, Windows WASAPI, and macOS Core Audio."
           }
         }
       },

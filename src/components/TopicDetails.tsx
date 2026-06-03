@@ -17,6 +17,7 @@ type TopicDetailsProps = {
   onOpenListeningMetricsLab: () => void;
   onOpenMicrophoneLab: () => void;
   onOpenSoundLab: () => void;
+  onOpenSystemAudioLab: () => void;
 };
 
 function SoundWaveDiagram({
@@ -96,7 +97,8 @@ export function TopicDetails({
   onOpenDigitalInterfaceLab,
   onOpenListeningMetricsLab,
   onOpenMicrophoneLab,
-  onOpenSoundLab
+  onOpenSoundLab,
+  onOpenSystemAudioLab
 }: TopicDetailsProps) {
   function closeDetails() {
     onClose();
@@ -213,6 +215,11 @@ export function TopicDetails({
 
                     if (topic.detail.lab?.type === "amplifier-speaker") {
                       onOpenAmplifierSpeakerLab();
+                      return;
+                    }
+
+                    if (topic.detail.lab?.type === "system-audio") {
+                      onOpenSystemAudioLab();
                       return;
                     }
 

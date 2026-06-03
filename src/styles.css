@@ -1198,11 +1198,23 @@ body.details-open {
   box-shadow: 0 18px 54px rgba(23, 33, 31, 0.16);
   display: grid;
   gap: 18px;
-  grid-template-columns: minmax(0, 1fr) minmax(300px, 390px);
+  grid-template-columns: minmax(0, 1fr);
   padding: clamp(16px, 3vw, 26px);
 }
 
 .digital-interface-workbench {
+  align-items: stretch;
+  background: #17211f;
+  border: 1px solid rgba(23, 33, 31, 0.12);
+  border-radius: 8px;
+  box-shadow: 0 18px 54px rgba(23, 33, 31, 0.16);
+  display: grid;
+  gap: 18px;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 390px);
+  padding: clamp(16px, 3vw, 26px);
+}
+
+.system-audio-workbench {
   align-items: stretch;
   background: #17211f;
   border: 1px solid rgba(23, 33, 31, 0.12);
@@ -1226,6 +1238,16 @@ body.details-open {
   padding: clamp(14px, 2vw, 20px);
 }
 
+.system-audio-overview {
+  background: #17211f;
+  border: 1px solid rgba(23, 33, 31, 0.12);
+  border-radius: 8px;
+  box-shadow: 0 18px 54px rgba(23, 33, 31, 0.16);
+  display: grid;
+  gap: 18px;
+  padding: clamp(16px, 3vw, 26px);
+}
+
 .amp-chain-node {
   align-items: center;
   background: rgba(255, 255, 255, 0.055);
@@ -1238,6 +1260,106 @@ body.details-open {
   justify-content: space-between;
   min-height: 64px;
   padding: 12px 14px;
+}
+
+.system-audio-overview-grid {
+  align-items: stretch;
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.system-audio-frame-panel {
+  align-content: start;
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #ffffff;
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  padding: clamp(14px, 2vw, 18px);
+}
+
+.system-audio-frame-panel h2 {
+  color: #ffffff;
+  font-size: clamp(1.05rem, 1.8vw, 1.28rem);
+  margin: 0;
+}
+
+.system-audio-architecture-card {
+  margin: 0;
+  min-width: 0;
+}
+
+.system-audio-architecture-stack {
+  display: grid;
+  gap: 8px;
+}
+
+.system-audio-architecture-row {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.system-audio-architecture-box {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(126, 231, 216, 0.2);
+  border-radius: 8px;
+  display: grid;
+  gap: 6px;
+  min-height: 70px;
+  min-width: 0;
+  padding: 12px 14px;
+}
+
+.system-audio-architecture-box strong {
+  color: #ffffff;
+  font-size: 0.98rem;
+  line-height: 1.25;
+}
+
+.system-audio-architecture-box span {
+  color: #c4d6d1;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.system-audio-down-arrow {
+  color: #f0b46a;
+  font-size: 1.05rem;
+  font-weight: 900;
+  justify-self: center;
+  line-height: 1;
+}
+
+.system-audio-linux-notes {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.system-audio-linux-note {
+  background: rgba(126, 231, 216, 0.08);
+  border: 1px solid rgba(126, 231, 216, 0.18);
+  border-radius: 8px;
+  color: #dbe8e4;
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  padding: 14px;
+}
+
+.system-audio-linux-note h3 {
+  color: #7ee7d8;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.system-audio-linux-note p {
+  line-height: 1.6;
+  margin: 0;
 }
 
 .amp-chain-arrow {
@@ -1593,23 +1715,6 @@ body.details-open {
   padding: 16px;
 }
 
-.amp-lab-effects {
-  align-content: start;
-  background: rgba(255, 255, 255, 0.055);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  color: #dbe8e4;
-  display: grid;
-  gap: 16px;
-  padding: 16px;
-}
-
-.amp-lab-effects h2 {
-  color: #ffffff;
-  font-size: 1.2rem;
-  margin: 0;
-}
-
 .amp-principle-panel {
   background: rgba(255, 255, 255, 0.055);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -1670,167 +1775,81 @@ body.details-open {
   margin: 0;
 }
 
-.amp-effect-list {
+.system-audio-flow {
   display: grid;
   gap: 10px;
-}
-
-.amp-effect-card {
-  background: rgba(255, 255, 255, 0.055);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 8px;
-  display: grid;
-  gap: 8px;
-  padding: 12px;
-}
-
-.amp-effect-card.active {
-  background: rgba(126, 231, 216, 0.11);
-  border-color: rgba(126, 231, 216, 0.42);
-  box-shadow: inset 0 0 0 1px rgba(126, 231, 216, 0.12);
-}
-
-.amp-effect-card > button:first-child {
-  background: transparent;
-  border: 0;
-  color: #ffffff;
-  cursor: pointer;
-  font-weight: 820;
-  padding: 0;
-  text-align: left;
-}
-
-.amp-effect-card p {
-  color: #b8cbc6;
   margin: 0;
+  min-width: 0;
 }
 
-.amp-info-button {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 8px;
-  color: #dbe8e4;
-  cursor: pointer;
-  justify-self: start;
-  min-height: 34px;
-  padding: 0 10px;
-}
-
-.lab-slider {
-  background: rgba(255, 255, 255, 0.055);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 8px;
-  display: grid;
-  gap: 10px;
-  padding: 12px;
-}
-
-.lab-slider span,
-.lab-slider strong {
-  color: #ffffff;
-  font-weight: 760;
-}
-
-.lab-slider input[type="range"] {
-  accent-color: #7ee7d8;
+.system-audio-flow svg {
+  display: block;
+  height: auto;
   width: 100%;
 }
 
-.lab-play-button {
-  background: #7ee7d8;
-  border: 0;
-  border-radius: 8px;
-  color: #10211e;
-  cursor: pointer;
-  font-weight: 840;
-  min-height: 44px;
-  padding: 0 14px;
-}
-
-.amp-play-state,
-.lab-warning {
-  border-radius: 8px;
-  margin: 0;
-  padding: 10px 12px;
-}
-
-.amp-play-state {
-  background: rgba(126, 231, 216, 0.09);
+.system-audio-flow figcaption {
   color: #dbe8e4;
+  line-height: 1.55;
 }
 
-.lab-warning {
-  background: rgba(240, 180, 106, 0.13);
-  border: 1px solid rgba(240, 180, 106, 0.32);
-  color: #ffe5c4;
-}
-
-.effect-modal-layer {
-  align-items: center;
-  background: rgba(12, 18, 17, 0.68);
-  display: flex;
-  inset: 0;
-  justify-content: center;
-  padding: clamp(16px, 4vw, 32px);
-  position: fixed;
-  z-index: 90;
-}
-
-.effect-modal {
-  background: #17211f;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-left: 5px solid #7ee7d8;
+.system-audio-side {
+  align-content: start;
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
-  box-shadow: 0 18px 54px rgba(23, 33, 31, 0.24);
   color: #dbe8e4;
   display: grid;
-  gap: 12px;
-  max-height: calc(100vh - 48px);
-  max-width: 560px;
-  overflow-y: auto;
-  padding: clamp(18px, 3vw, 26px);
-  width: min(100%, 560px);
+  gap: 14px;
+  padding: 16px;
 }
 
-.effect-modal h2 {
+.system-audio-side h2 {
   color: #ffffff;
+  font-size: 1.15rem;
   margin: 0;
 }
 
-.effect-modal p {
+.system-audio-side p {
+  line-height: 1.6;
   margin: 0;
 }
 
-.effect-modal-sections {
+.system-audio-concepts {
   display: grid;
-  gap: 12px;
+  gap: 10px;
 }
 
-.effect-modal-section {
-  background: rgba(255, 255, 255, 0.045);
+.system-audio-concept {
+  background: rgba(255, 255, 255, 0.055);
   border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 8px;
-  display: grid;
-  gap: 6px;
   padding: 12px;
 }
 
-.effect-modal-section h3 {
-  color: #7ee7d8;
-  font-size: 0.92rem;
+.system-audio-stats {
+  display: grid;
+  gap: 10px;
   margin: 0;
 }
 
-.effect-modal button {
-  background: #7ee7d8;
-  border: 0;
+.system-audio-stats div {
+  background: rgba(126, 231, 216, 0.09);
+  border: 1px solid rgba(126, 231, 216, 0.18);
   border-radius: 8px;
-  color: #10211e;
-  cursor: pointer;
-  font-weight: 840;
-  justify-self: start;
-  min-height: 40px;
-  padding: 0 14px;
+  padding: 12px;
+}
+
+.system-audio-stats dt {
+  color: #7ee7d8;
+  font-weight: 820;
+  margin-bottom: 6px;
+}
+
+.system-audio-stats dd {
+  color: #dbe8e4;
+  line-height: 1.5;
+  margin: 0;
 }
 
 .codec-analog-path {
@@ -2002,7 +2021,9 @@ body.details-open {
 }
 
 .interface-bit-cell,
+.interface-i2s-data-pair,
 .interface-slot,
+.interface-tdm-channel,
 .interface-usb-packet {
   fill: rgba(126, 231, 216, 0.13);
   stroke: rgba(126, 231, 216, 0.45);
@@ -2010,7 +2031,9 @@ body.details-open {
 }
 
 .interface-bit-cell.right,
+.interface-i2s-data-pair.right,
 .interface-slot:nth-of-type(even),
+.interface-tdm-channel:nth-of-type(even),
 .interface-usb-packet {
   fill: rgba(240, 180, 106, 0.13);
   stroke: rgba(240, 180, 106, 0.45);
@@ -2047,6 +2070,17 @@ body.details-open {
   font-size: 14px;
 }
 
+.interface-i2s-line-label {
+  font-size: 15px;
+  text-anchor: middle;
+}
+
+.interface-tdm-note {
+  fill: #dbe8e4;
+  font-size: 13px;
+  font-weight: 720;
+}
+
 .interface-frame-marker {
   stroke: rgba(220, 236, 232, 0.32);
   stroke-dasharray: 7 7;
@@ -2073,6 +2107,38 @@ body.details-open {
   stroke: #f0b46a;
   stroke-linecap: round;
   stroke-width: 3;
+}
+
+.system-audio-node {
+  fill: rgba(255, 255, 255, 0.075);
+  stroke: rgba(126, 231, 216, 0.28);
+  stroke-width: 1.8;
+}
+
+.system-audio-arrow {
+  fill: none;
+  marker-end: url("#systemAudioArrow");
+  stroke: #f0b46a;
+  stroke-linecap: round;
+  stroke-width: 3;
+}
+
+.system-audio-arrow.reference {
+  marker-end: url("#systemAudioArrow");
+  stroke: #7ee7d8;
+  stroke-dasharray: 8 8;
+}
+
+.system-audio-arrow.echo {
+  marker-end: url("#systemAudioArrow");
+  stroke: rgba(240, 180, 106, 0.72);
+  stroke-dasharray: 6 7;
+}
+
+.system-audio-note {
+  fill: #dbe8e4;
+  font-size: 13px;
+  font-weight: 720;
 }
 
 .interface-node,
@@ -2857,7 +2923,8 @@ body.details-open {
   .mic-principle-workbench,
   .microphone-lab-workbench,
   .codec-lab-workbench,
-  .amp-lab-workbench {
+  .amp-lab-workbench,
+  .system-audio-workbench {
     grid-template-columns: 1fr;
   }
 
@@ -2879,7 +2946,9 @@ body.details-open {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .amp-lab-chain {
+  .amp-lab-chain,
+  .system-audio-overview-grid,
+  .system-audio-linux-notes {
     grid-template-columns: 1fr;
   }
 
