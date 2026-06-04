@@ -933,6 +933,36 @@ export const categories: Category[] = [
             zh: "实时音频处理要求每一小块音频都在截止时间前完成计算。只要回调线程被阻塞、CPU 峰值过高或 buffer 供给不连续，就可能出现卡顿、爆音、断续和延迟增加。",
             en: "Real-time audio processing requires each small audio block to be computed before its deadline. If the callback thread blocks, CPU spikes, or buffers are not supplied continuously, users may hear glitches, pops, dropouts, or increased latency."
           },
+          termExplanations: [
+            {
+              name: { zh: "Buffer size", en: "Buffer size" },
+              explanation: {
+                zh: "Buffer size 表示一次回调处理多少帧音频。48 kHz 下 128 帧 buffer 约等于 2.67 ms，64 帧约等于 1.33 ms；buffer 越小，端到端延迟越低，但每次回调的可用计算时间也越短。",
+                en: "Buffer size is the number of audio frames processed by one callback. At 48 kHz, a 128-frame buffer is about 2.67 ms and a 64-frame buffer is about 1.33 ms. Smaller buffers lower end-to-end latency but reduce the available compute time per callback."
+              }
+            },
+            {
+              name: { zh: "回调 deadline", en: "Callback deadline" },
+              explanation: {
+                zh: "deadline 由 buffer 帧数和采样率决定。实时线程必须在下一块 buffer 到来前完成 DSP、格式转换和数据交付，否则播放端会缺样本，采集端会丢样本。",
+                en: "The deadline is set by buffer frames and sample rate. The real-time thread must finish DSP, format conversion, and handoff before the next buffer arrives, otherwise playback runs out of samples or capture drops samples."
+              }
+            },
+            {
+              name: { zh: "XRUN", en: "XRUN" },
+              explanation: {
+                zh: "XRUN 是 underrun 或 overrun 的统称。播放 underrun 表示输出端来不及拿到新数据，采集 overrun 表示输入端数据没有及时被取走，常见听感是爆音、断续或短暂静音。",
+                en: "XRUN is a shared term for underrun or overrun. A playback underrun means the output side did not receive new data in time; a capture overrun means input data was not consumed in time. Users may hear pops, dropouts, or short silence."
+              }
+            },
+            {
+              name: { zh: "实时安全操作", en: "Real-time safe operations" },
+              explanation: {
+                zh: "实时回调中应只做可预测的计算，避免锁等待、磁盘 IO、网络请求、大量日志和运行期分配。耗时或不可预测任务应放到非实时线程，通过无锁队列或预分配 buffer 交换数据。",
+                en: "A real-time callback should do predictable computation only, avoiding lock waits, disk IO, network requests, heavy logging, and runtime allocation. Slow or unpredictable work should move to non-real-time threads and exchange data through lock-free queues or preallocated buffers."
+              }
+            }
+          ],
           keyConcepts: [
             { zh: "Buffer 越小延迟越低，但留给处理的时间也越少。", en: "Smaller buffers reduce latency but leave less time for processing." },
             { zh: "实时回调中应避免阻塞 IO、锁竞争、动态内存分配和不可预测操作。", en: "Real-time callbacks should avoid blocking IO, lock contention, dynamic allocation, and unpredictable operations." },

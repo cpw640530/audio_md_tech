@@ -440,6 +440,28 @@ describe("Audio knowledge app", () => {
     expect(within(details).getByRole("button", { name: "打开系统音频架构实验室" })).toBeInTheDocument();
   });
 
+  it("expands real-time audio processing knowledge with detailed buffer and xrun terms", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    const categoriesRegion = screen.getByRole("region", { name: "知识分类" });
+    await user.click(within(categoriesRegion).getByRole("button", { name: /音频软件/ }));
+    await user.click(screen.getByRole("button", { name: /实时音频处理/ }));
+
+    const details = screen.getByRole("dialog", { name: "主题详情" });
+    expect(within(details).getByText(/每一小块音频都在截止时间前完成计算/)).toBeInTheDocument();
+    expect(within(details).getByRole("heading", { name: "Buffer size" })).toBeInTheDocument();
+    expect(within(details).getByText(/48 kHz 下 128 帧 buffer 约等于 2\.67 ms/)).toBeInTheDocument();
+    expect(within(details).getByRole("heading", { name: "回调 deadline" })).toBeInTheDocument();
+    expect(within(details).getByText(/deadline 由 buffer 帧数和采样率决定/)).toBeInTheDocument();
+    expect(within(details).getByRole("heading", { name: "XRUN" })).toBeInTheDocument();
+    expect(within(details).getByText(/XRUN 是 underrun 或 overrun 的统称/)).toBeInTheDocument();
+    expect(within(details).getByRole("heading", { name: "实时安全操作" })).toBeInTheDocument();
+    expect(within(details).getByText(/避免锁等待、磁盘 IO、网络请求、大量日志和运行期分配/)).toBeInTheDocument();
+    expect(within(details).getByText(/实时回调时间线/)).toBeInTheDocument();
+    expect(within(details).queryByRole("button", { name: "打开系统音频架构实验室" })).not.toBeInTheDocument();
+  });
+
   it("opens the system audio architecture lab from the software topic", async () => {
     const user = userEvent.setup();
     render(<App />);
