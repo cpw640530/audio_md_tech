@@ -1309,9 +1309,60 @@ body.details-open {
   border-radius: 8px;
   display: grid;
   gap: 6px;
-  min-height: 70px;
+  min-height: 84px;
   min-width: 0;
   padding: 12px 14px;
+}
+
+.system-audio-architecture-box.app {
+  border-color: rgba(112, 166, 255, 0.32);
+}
+
+.system-audio-architecture-box.middleware {
+  border-color: rgba(126, 231, 216, 0.32);
+}
+
+.system-audio-architecture-box.software {
+  border-color: rgba(145, 214, 121, 0.32);
+}
+
+.system-audio-architecture-box.driver {
+  border-color: rgba(240, 180, 106, 0.36);
+}
+
+.system-audio-architecture-box.hardware {
+  border-color: rgba(232, 124, 112, 0.34);
+}
+
+.system-audio-kind-badge {
+  align-self: start;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 860;
+  justify-self: start;
+  line-height: 1;
+  padding: 5px 8px;
+}
+
+.system-audio-kind-badge.app {
+  color: #8ab5ff;
+}
+
+.system-audio-kind-badge.middleware {
+  color: #7ee7d8;
+}
+
+.system-audio-kind-badge.software {
+  color: #a8e377;
+}
+
+.system-audio-kind-badge.driver {
+  color: #f0b46a;
+}
+
+.system-audio-kind-badge.hardware {
+  color: #f08e82;
 }
 
 .system-audio-architecture-box strong {
@@ -1332,6 +1383,72 @@ body.details-open {
   font-weight: 900;
   justify-self: center;
   line-height: 1;
+}
+
+.system-audio-data-flow {
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  min-width: 0;
+  padding: clamp(14px, 2vw, 18px);
+}
+
+.system-audio-data-flow-lane {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+.system-audio-data-flow-lane h3 {
+  color: #ffffff;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.system-audio-data-flow-steps {
+  align-items: stretch;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  min-width: 0;
+}
+
+.system-audio-data-flow-step {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(126, 231, 216, 0.18);
+  border-radius: 8px;
+  color: #dbe8e4;
+  display: grid;
+  gap: 6px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  min-height: 58px;
+  min-width: 0;
+  padding: 10px 12px;
+}
+
+.system-audio-data-flow-lane.up .system-audio-data-flow-step {
+  border-color: rgba(240, 180, 106, 0.22);
+}
+
+.system-audio-data-flow-step span {
+  font-size: 0.88rem;
+  font-weight: 760;
+  line-height: 1.35;
+  min-width: 0;
+}
+
+.system-audio-data-flow-step b {
+  color: #f0b46a;
+  font-size: 1rem;
+}
+
+.system-audio-data-flow figcaption {
+  color: #c4d6d1;
+  line-height: 1.55;
 }
 
 .system-audio-linux-notes {

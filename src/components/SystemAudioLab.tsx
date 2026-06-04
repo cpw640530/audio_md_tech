@@ -13,6 +13,7 @@ type FlowStep = {
 };
 
 type ArchitectureLayer = {
+  kind: "app" | "middleware" | "software" | "driver" | "hardware";
   title: Record<Language, string>;
   detail: Record<Language, string>;
 };
@@ -24,22 +25,27 @@ type SystemAudioLabProps = {
 
 const genericArchitectureLayers = [
   {
+    kind: "app",
     title: { zh: "应用程序", en: "Application" },
     detail: { zh: "播放器 / 浏览器 / 录音 / 通话软件", en: "player / browser / recorder / call app" }
   },
   {
+    kind: "middleware",
     title: { zh: "音频 API / 音频服务", en: "Audio API / audio service" },
     detail: { zh: "打开音频流、管理会话、权限和音量", en: "opens streams, manages sessions, permission, and volume" }
   },
   {
+    kind: "software",
     title: { zh: "混音 / 路由 / 重采样 / 音量管理", en: "Mixing / routing / resampling / volume" },
     detail: { zh: "多路声音合成，选择目标设备，统一格式", en: "mixes streams, selects devices, normalizes formats" }
   },
   {
+    kind: "driver",
     title: { zh: "驱动接口", en: "Driver interface" },
     detail: { zh: "PCM 数据、控制命令、DMA 和时钟配置", en: "PCM data, controls, DMA, and clock configuration" }
   },
   {
+    kind: "hardware",
     title: { zh: "硬件设备", en: "Hardware device" },
     detail: { zh: "Codec / DAC / ADC / 麦克风 / 扬声器", en: "Codec / DAC / ADC / microphone / speaker" }
   }
@@ -47,22 +53,27 @@ const genericArchitectureLayers = [
 
 const linuxArchitectureLayers = [
   {
+    kind: "app",
     title: { zh: "应用程序", en: "Application" },
     detail: { zh: "播放器 / 浏览器 / 录音软件 / 通话软件", en: "player / browser / recorder / call app" }
   },
   {
+    kind: "middleware",
     title: { zh: "PipeWire / PulseAudio / JACK", en: "PipeWire / PulseAudio / JACK" },
     detail: { zh: "音频流管理、路由、会话和低延迟服务", en: "stream management, routing, sessions, low-latency service" }
   },
   {
+    kind: "driver",
     title: { zh: "ALSA 用户态接口", en: "ALSA user-space interface" },
     detail: { zh: "alsa-lib / PCM API / mixer control", en: "alsa-lib / PCM API / mixer control" }
   },
   {
+    kind: "driver",
     title: { zh: "Linux Kernel ALSA 驱动", en: "Linux kernel ALSA driver" },
     detail: { zh: "声卡驱动 / I2S / USB Audio / HDA / ASoC", en: "sound driver / I2S / USB Audio / HDA / ASoC" }
   },
   {
+    kind: "hardware",
     title: { zh: "硬件层", en: "Hardware layer" },
     detail: { zh: "Codec / DAC / ADC / 功放 / 麦克风 / 扬声器", en: "Codec / DAC / ADC / amplifier / mic / speaker" }
   }
@@ -84,6 +95,44 @@ const linuxScenarioCards = [
     }
   }
 ] satisfies Array<{ title: Record<Language, string>; body: Record<Language, string> }>;
+
+const architectureKindLabels = {
+  app: { zh: "应用", en: "App" },
+  middleware: { zh: "中间件", en: "Middleware" },
+  software: { zh: "软件", en: "Software" },
+  driver: { zh: "驱动", en: "Driver" },
+  hardware: { zh: "硬件", en: "Hardware" }
+} satisfies Record<ArchitectureLayer["kind"], Record<Language, string>>;
+
+const audioDataFlows = [
+  {
+    label: { zh: "播放数据流", en: "Playback data flow" },
+    direction: "down",
+    steps: [
+      { zh: "App", en: "App" },
+      { zh: "音频 API", en: "Audio API" },
+      { zh: "音频服务 / 混音路由", en: "Audio service / mix routing" },
+      { zh: "ALSA / 驱动", en: "ALSA / driver" },
+      { zh: "DAC / 功放", en: "DAC / amplifier" },
+      { zh: "扬声器 / 耳机", en: "Speaker / headset" }
+    ]
+  },
+  {
+    label: { zh: "采集数据流", en: "Capture data flow" },
+    direction: "up",
+    steps: [
+      { zh: "麦克风 / ADC", en: "Mic / ADC" },
+      { zh: "ALSA / 驱动", en: "ALSA / driver" },
+      { zh: "输入路由 / 预处理", en: "Input routing / preprocess" },
+      { zh: "音频 API", en: "Audio API" },
+      { zh: "App", en: "App" }
+    ]
+  }
+] satisfies Array<{
+  label: Record<Language, string>;
+  direction: "down" | "up";
+  steps: Array<Record<Language, string>>;
+}>;
 
 const flowTabs: Array<{ id: FlowMode; label: Record<Language, string> }> = [
   { id: "playback", label: { zh: "播放链路", en: "Playback path" } },
@@ -353,7 +402,10 @@ function ArchitectureStack({
       <div className="system-audio-architecture-stack">
         {layers.map((layer, index) => (
           <div className="system-audio-architecture-row" key={layer.title.en}>
-            <div className="system-audio-architecture-box">
+            <div className={`system-audio-architecture-box ${layer.kind}`}>
+              <span className={`system-audio-kind-badge ${layer.kind}`}>
+                {architectureKindLabels[layer.kind][language]}
+              </span>
               <strong>{layer.title[language]}</strong>
               <span>{layer.detail[language]}</span>
             </div>
@@ -361,6 +413,35 @@ function ArchitectureStack({
           </div>
         ))}
       </div>
+    </figure>
+  );
+}
+
+function DataFlowDiagram({ language }: { language: Language }) {
+  return (
+    <figure
+      aria-label={language === "zh" ? "播放和采集数据流方向图" : "Playback and capture data-flow direction diagram"}
+      className="system-audio-data-flow"
+      role="img"
+    >
+      {audioDataFlows.map((flow) => (
+        <div className={`system-audio-data-flow-lane ${flow.direction}`} key={flow.label.en}>
+          <h3>{flow.label[language]}</h3>
+          <div className="system-audio-data-flow-steps">
+            {flow.steps.map((step, index) => (
+              <div className="system-audio-data-flow-step" key={`${flow.label.en}-${step.en}`}>
+                <span>{step[language]}</span>
+                {index < flow.steps.length - 1 ? <b aria-hidden="true">→</b> : null}
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+      <figcaption>
+        {language === "zh"
+          ? "播放是从 App 向硬件输出；采集是从麦克风硬件向 App 回传。"
+          : "Playback moves from app to output hardware; capture moves from microphone hardware back to the app."}
+      </figcaption>
     </figure>
   );
 }
@@ -414,6 +495,8 @@ export function SystemAudioLab({ language, onBack }: SystemAudioLabProps) {
             />
           </article>
         </div>
+
+        <DataFlowDiagram language={language} />
 
         <div className="system-audio-linux-notes" aria-label={language === "zh" ? "Linux 音频场景对比" : "Linux audio scenario comparison"}>
           {linuxScenarioCards.map((card) => (
