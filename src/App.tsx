@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { AmplifierSpeakerLab } from "./components/AmplifierSpeakerLab";
+import { AudioCodecLab } from "./components/AudioCodecLab";
 import { CategoryTabs } from "./components/CategoryTabs";
 import { CodecHardwareLab } from "./components/CodecHardwareLab";
 import { DigitalAudioLab } from "./components/DigitalAudioLab";
@@ -8,6 +9,7 @@ import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
 import { ListeningMetricsLab } from "./components/ListeningMetricsLab";
 import { MicrophoneLab } from "./components/MicrophoneLab";
+import { RealtimeAudioLab } from "./components/RealtimeAudioLab";
 import { Roadmap } from "./components/Roadmap";
 import { SearchBar } from "./components/SearchBar";
 import { SoundWaveLab } from "./components/SoundWaveLab";
@@ -93,6 +95,8 @@ export default function App() {
     | "digitalInterfaceLab"
     | "amplifierSpeakerLab"
     | "systemAudioLab"
+    | "audioCodecLab"
+    | "realtimeAudioLab"
   >("knowledge");
   const [query, setQuery] = useState("");
   const [selectedTopic, setSelectedTopic] = useState<DisplayTopic | null>(null);
@@ -285,6 +289,42 @@ export default function App() {
     );
   }
 
+  if (activeView === "audioCodecLab") {
+    return (
+      <div className="app-shell">
+        <Header
+          language={language}
+          onToggleLanguage={() => setLanguage((current) => (current === "zh" ? "en" : "zh"))}
+        />
+        <AudioCodecLab language={language} onBack={() => setActiveView("knowledge")} />
+        <footer className="site-footer">
+          <span>{interfaceCopy.footer[language]}</span>
+          <a href="docs/audio_technology_knowledge_outline.md">
+            {language === "zh" ? "查看 Markdown 大纲" : "Open Markdown outline"}
+          </a>
+        </footer>
+      </div>
+    );
+  }
+
+  if (activeView === "realtimeAudioLab") {
+    return (
+      <div className="app-shell">
+        <Header
+          language={language}
+          onToggleLanguage={() => setLanguage((current) => (current === "zh" ? "en" : "zh"))}
+        />
+        <RealtimeAudioLab language={language} onBack={() => setActiveView("knowledge")} />
+        <footer className="site-footer">
+          <span>{interfaceCopy.footer[language]}</span>
+          <a href="docs/audio_technology_knowledge_outline.md">
+            {language === "zh" ? "查看 Markdown 大纲" : "Open Markdown outline"}
+          </a>
+        </footer>
+      </div>
+    );
+  }
+
   return (
     <div className="app-shell">
       <Header
@@ -315,6 +355,10 @@ export default function App() {
                 setSelectedTopic(null);
                 setActiveView("amplifierSpeakerLab");
               }}
+              onOpenAudioCodecLab={() => {
+                setSelectedTopic(null);
+                setActiveView("audioCodecLab");
+              }}
               onOpenSoundLab={() => {
                 setSelectedTopic(null);
                 setActiveView("soundLab");
@@ -334,6 +378,10 @@ export default function App() {
               onOpenMicrophoneLab={() => {
                 setSelectedTopic(null);
                 setActiveView("microphoneLab");
+              }}
+              onOpenRealtimeAudioLab={() => {
+                setSelectedTopic(null);
+                setActiveView("realtimeAudioLab");
               }}
               onOpenCodecLab={() => {
                 setSelectedTopic(null);

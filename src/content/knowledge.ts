@@ -31,7 +31,9 @@ export type TopicLab = {
     | "codec-hardware"
     | "digital-interface"
     | "amplifier-speaker"
-    | "system-audio";
+    | "system-audio"
+    | "audio-codec"
+    | "realtime-audio";
   title: LocalizedText;
   description: LocalizedText;
   buttonLabel: LocalizedText;
@@ -968,6 +970,15 @@ export const categories: Category[] = [
             { zh: "实时回调中应避免阻塞 IO、锁竞争、动态内存分配和不可预测操作。", en: "Real-time callbacks should avoid blocking IO, lock contention, dynamic allocation, and unpredictable operations." },
             { zh: "XRUN、underrun、overrun 是定位播放或采集不连续的重要线索。", en: "XRUN, underrun, and overrun events are important clues for playback or capture discontinuity." }
           ],
+          lab: {
+            type: "realtime-audio",
+            title: { zh: "实时音频处理实验室", en: "Real-Time Audio Processing Lab" },
+            description: {
+              zh: "进入独立界面调节采样率、buffer 帧数、DSP 处理耗时和 CPU 抖动，观察 deadline、端到端延迟和 XRUN 风险如何变化。",
+              en: "Open an independent lab to adjust sample rate, buffer frames, DSP time, and CPU jitter, then watch deadline, end-to-end latency, and XRUN risk change."
+            },
+            buttonLabel: { zh: "打开实时音频处理实验室", en: "Open real-time audio processing lab" }
+          },
           misconception: {
             zh: "把 buffer 调到最小不一定最好；设备性能、系统调度、算法复杂度和稳定性需要一起平衡。",
             en: "The smallest buffer is not always best; device performance, scheduler behavior, algorithm cost, and stability must be balanced."
@@ -991,14 +1002,53 @@ export const categories: Category[] = [
         ],
         detail: {
           explanation: {
-            zh: "音频编解码器决定声音如何被压缩、传输和还原。无损编码保留原始信息，有损编码利用人耳掩蔽效应丢弃不易察觉的信息，蓝牙和实时通信还要额外考虑延迟、丢包和功耗。",
-            en: "Audio codecs determine how sound is compressed, transmitted, and reconstructed. Lossless codecs preserve original information, lossy codecs discard less audible information using hearing models, and Bluetooth or real-time communication codecs must also handle latency, packet loss, and power."
+            zh: "这里的 Codec 指压缩编解码算法，不是前面硬件章节里的音频 Codec 芯片。它接收已经采样量化后的 PCM，把数据按帧切开，再通过无损预测、感知模型、语音模型或蓝牙传输约束进行压缩；播放或接收端再解码回 PCM 交给系统音频栈、DAC 或后续处理。",
+            en: "Here codec means a compression algorithm, not the hardware audio codec chip discussed in the hardware section. It takes already sampled PCM, splits it into frames, compresses it with lossless prediction, perceptual models, speech models, or Bluetooth transport constraints, then decodes it back to PCM for the system audio stack, DAC, or later processing."
           },
           keyConcepts: [
             { zh: "码率影响文件大小和压缩余量，但不同编码器在同码率下质量不同。", en: "Bitrate affects file size and compression headroom, but different codecs have different quality at the same bitrate." },
             { zh: "帧长和算法复杂度会影响端到端延迟。", en: "Frame size and algorithmic complexity affect end-to-end latency." },
             { zh: "Opus、LC3 等更适合低延迟或通信场景，FLAC 更适合无损归档。", en: "Opus and LC3 are useful for low-latency or communication scenarios, while FLAC is better for lossless archiving." }
           ],
+          termExplanations: [
+            {
+              name: { zh: "编码与解码", en: "Encoding and decoding" },
+              explanation: {
+                zh: "编码把 PCM 转成更小的码流或文件，解码把码流恢复成可播放的 PCM。压缩算法可能是无损的，也可能是有损的。",
+                en: "Encoding turns PCM into a smaller bitstream or file; decoding reconstructs playable PCM. The compression may be lossless or lossy."
+              }
+            },
+            {
+              name: { zh: "封装与码流", en: "Container and bitstream" },
+              explanation: {
+                zh: "码流是编码后的音频数据，封装则负责文件头、时间戳、索引和多轨信息。例如 AAC 码流可以放进 MP4/M4A 容器。",
+                en: "A bitstream is encoded audio data, while a container carries headers, timestamps, indexes, and tracks. For example, AAC bitstreams can be stored in MP4/M4A containers."
+              }
+            },
+            {
+              name: { zh: "帧长与算法延迟", en: "Frame size and algorithmic delay" },
+              explanation: {
+                zh: "多数 Codec 需要攒够一帧音频后再分析和编码。帧越长，压缩效率可能更高，但实时通话和游戏互动的延迟也会增加。",
+                en: "Most codecs collect a frame before analysis and encoding. Longer frames can improve compression efficiency, but increase delay for calls and interactive audio."
+              }
+            },
+            {
+              name: { zh: "蓝牙 Codec", en: "Bluetooth codec" },
+              explanation: {
+                zh: "蓝牙 Codec 还要受无线带宽、丢包、耳机芯片功耗和设备兼容性限制，所以码率高不一定始终稳定。",
+                en: "Bluetooth codecs are also constrained by wireless bandwidth, packet loss, headset power, and compatibility, so a higher bitrate is not always stable."
+              }
+            }
+          ],
+          lab: {
+            type: "audio-codec",
+            title: { zh: "音频编解码实验室", en: "Audio Codec Lab" },
+            description: {
+              zh: "进入独立界面查看 PCM 如何经过分帧、压缩、码流传输和解码，并按音乐、语音、会议、蓝牙和低延迟场景比较常见 Codec。",
+              en: "Open an independent lab to see how PCM is framed, compressed, transmitted as a bitstream, and decoded, then compare common codecs for music, speech, conferencing, Bluetooth, and low-latency use."
+            },
+            buttonLabel: { zh: "打开音频编解码实验室", en: "Open audio codec lab" }
+          },
           misconception: {
             zh: "相同码率不代表相同音质或相同延迟；编码器实现、内容类型和传输环境都会改变结果。",
             en: "The same bitrate does not mean the same quality or latency; encoder implementation, content type, and network conditions change the result."

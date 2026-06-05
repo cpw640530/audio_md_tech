@@ -460,6 +460,79 @@ describe("Audio knowledge app", () => {
     expect(within(details).getByText(/避免锁等待、磁盘 IO、网络请求、大量日志和运行期分配/)).toBeInTheDocument();
     expect(within(details).getByText(/实时回调时间线/)).toBeInTheDocument();
     expect(within(details).queryByRole("button", { name: "打开系统音频架构实验室" })).not.toBeInTheDocument();
+    expect(within(details).getByRole("button", { name: "打开实时音频处理实验室" })).toBeInTheDocument();
+  });
+
+  it("opens the real-time audio processing lab and simulates deadline xruns", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    const categoriesRegion = screen.getByRole("region", { name: "知识分类" });
+    await user.click(within(categoriesRegion).getByRole("button", { name: /音频软件/ }));
+    await user.click(screen.getByRole("button", { name: /实时音频处理/ }));
+    await user.click(
+      within(screen.getByRole("dialog", { name: "主题详情" })).getByRole("button", {
+        name: "打开实时音频处理实验室"
+      })
+    );
+
+    expect(screen.getByRole("heading", { name: "实时音频处理实验室" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "返回知识库" })).toBeInTheDocument();
+    const lab = screen.getByRole("region", { name: "实时音频处理实验台" });
+    expect(within(lab).getByRole("img", { name: "基础音频处理流程图" })).toBeInTheDocument();
+    expect(within(lab).getByRole("img", { name: "ALSA 采集 PCM 到编码流程图" })).toBeInTheDocument();
+    expect(screen.getByText("默认格式：16 kHz / mono / 16-bit PCM")).toBeInTheDocument();
+    expect(screen.getByText("32 ms 处理帧：512 samples / 1024 bytes")).toBeInTheDocument();
+    expect(screen.getByText("采集 period：32.00 ms")).toBeInTheDocument();
+    expect(screen.getByText("Deadline：32.00 ms")).toBeInTheDocument();
+    expect(screen.getByText("估算采集到编码延迟：96.00 ms")).toBeInTheDocument();
+    expect(screen.getByText("状态：稳定")).toBeInTheDocument();
+    expect(screen.getByText("最坏处理耗时：1.80 ms")).toBeInTheDocument();
+    expect(screen.getByText("ALSA ring buffer")).toBeInTheDocument();
+    expect(screen.getByText("copy_to_user / mmap")).toBeInTheDocument();
+    expect(screen.getByText("32ms filter frame")).toBeInTheDocument();
+    expect(screen.getByText("MP3 frame")).toBeInTheDocument();
+
+    expect(within(lab).queryByRole("slider")).not.toBeInTheDocument();
+    expect(screen.getByText("DSP 耗时：1.40 ms")).toBeInTheDocument();
+    expect(screen.getByText(/当前示例留有充足处理余量/)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "实时安全规则" })).toBeInTheDocument();
+    expect(screen.getByText(/不要在采集回调或低延迟线程里做磁盘 IO/)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "排查方向" })).toBeInTheDocument();
+    expect(screen.getByText(/CPU 峰值过高/)).toBeInTheDocument();
+  });
+
+  it("keeps real-time audio flow diagrams separated from static metrics", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    const categoriesRegion = screen.getByRole("region", { name: "知识分类" });
+    await user.click(within(categoriesRegion).getByRole("button", { name: /音频软件/ }));
+    await user.click(screen.getByRole("button", { name: /实时音频处理/ }));
+    await user.click(
+      within(screen.getByRole("dialog", { name: "主题详情" })).getByRole("button", {
+        name: "打开实时音频处理实验室"
+      })
+    );
+
+    const lab = screen.getByRole("region", { name: "实时音频处理实验台" });
+    const visual = within(lab).getByRole("region", { name: "实时音频调度图" });
+    const metrics = lab.querySelector(".realtime-audio-metrics");
+    const flowGrid = lab.querySelector(".realtime-flow-grid");
+
+    expect(lab).toHaveClass("realtime-audio-workbench");
+    expect(metrics).toHaveClass("realtime-audio-metrics");
+    expect(flowGrid).toBeInTheDocument();
+    expect(visual).toContainElement(flowGrid as HTMLElement);
+    expect(within(lab).queryByRole("slider")).not.toBeInTheDocument();
+    expect(within(visual).getByRole("img", { name: "基础音频处理流程图" })).toHaveAttribute(
+      "viewBox",
+      expect.stringMatching(/^0 0 1180 /)
+    );
+    expect(within(visual).getByRole("img", { name: "ALSA 采集 PCM 到编码流程图" })).toHaveAttribute(
+      "viewBox",
+      expect.stringMatching(/^0 0 1180 /)
+    );
   });
 
   it("opens the system audio architecture lab from the software topic", async () => {
@@ -505,6 +578,60 @@ describe("Audio knowledge app", () => {
     expect(within(overview).getByRole("heading", { name: "桌面 Linux" })).toBeInTheDocument();
     expect(within(overview).getByRole("heading", { name: "嵌入式 Linux" })).toBeInTheDocument();
     expect(within(overview).getByText(/ASoC 把 CPU DAI、Codec DAI/)).toBeInTheDocument();
+  });
+
+  it("expands audio codec knowledge with a dedicated compression lab", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getByRole("button", { name: /音频编解码/ }));
+
+    const details = screen.getByRole("dialog", { name: "主题详情" });
+    expect(within(details).getByText(/这里的 Codec 指压缩编解码算法/)).toBeInTheDocument();
+    expect(within(details).getByRole("heading", { name: "编码与解码" })).toBeInTheDocument();
+    expect(within(details).getByRole("heading", { name: "帧长与算法延迟" })).toBeInTheDocument();
+    expect(within(details).getByRole("heading", { name: "蓝牙 Codec" })).toBeInTheDocument();
+    expect(within(details).getByRole("button", { name: "打开音频编解码实验室" })).toBeInTheDocument();
+
+    await user.click(within(details).getByRole("button", { name: "打开音频编解码实验室" }));
+
+    expect(screen.getByRole("heading", { name: "音频编解码实验室" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "返回知识库" })).toBeInTheDocument();
+    const flowSection = screen.getByRole("region", { name: "音频编码和解码流程图" });
+    expect(flowSection.querySelector(".audio-codec-flow-grid")).toHaveClass("stacked");
+    const encodeFlow = within(flowSection).getByRole("img", { name: "音频编码流程图" });
+    const decodeFlow = within(flowSection).getByRole("img", { name: "音频解码流程图" });
+    expect(within(encodeFlow).getByText("PCM 输入")).toBeInTheDocument();
+    expect(within(encodeFlow).getByText("分帧")).toBeInTheDocument();
+    expect(within(encodeFlow).getByText("分析 / 建模")).toBeInTheDocument();
+    expect(within(encodeFlow).getByText("量化 / 码率控制")).toBeInTheDocument();
+    expect(within(encodeFlow).getByText("码流 / 封装")).toBeInTheDocument();
+    expect(within(decodeFlow).getByText("码流 / 文件 / 网络包")).toBeInTheDocument();
+    expect(within(decodeFlow).getByText("解包 / 纠错")).toBeInTheDocument();
+    expect(within(decodeFlow).getByText("反量化 / 合成")).toBeInTheDocument();
+    expect(within(decodeFlow).getByText("PCM 输出")).toBeInTheDocument();
+    expect(within(decodeFlow).getByText("播放 / 后处理")).toBeInTheDocument();
+    const scenarioSection = screen.getByRole("region", { name: "音频编解码应用场景" });
+    expect(flowSection.compareDocumentPosition(scenarioSection) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "格式对比" })).toBeInTheDocument();
+    expect(screen.getByText("FLAC")).toBeInTheDocument();
+    expect(screen.getByText("LDAC")).toBeInTheDocument();
+    expect(screen.getByText("LC3")).toBeInTheDocument();
+    expect(screen.getByText(/通俗理解：像把原始录音直接逐点记下来/)).toBeInTheDocument();
+    expect(screen.getByText(/16 kHz 采样率的 PCM 最高只到 8 kHz/)).toBeInTheDocument();
+    expect(screen.getByText(/MP3 不会固定砍掉某个频率/)).toBeInTheDocument();
+    expect(screen.getByText(/例子：FLAC 像把重复规律写成公式/)).toBeInTheDocument();
+    expect(screen.getByText(/例子：Opus 在网络变差时可以降低码率/)).toBeInTheDocument();
+    expect(screen.getByText(/例子：LDAC 990 kbps 更像走更宽的无线通道/)).toBeInTheDocument();
+    expect(screen.getByText("音乐存储")).toBeInTheDocument();
+    expect(screen.getByText("蓝牙耳机")).toBeInTheDocument();
+    expect(screen.getByText("低延迟互动")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "语音通话" })).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "语音通话" }));
+
+    expect(screen.getByText("语音通话：清晰度、抗丢包和低码率更关键。")).toBeInTheDocument();
+    expect(screen.getByText("推荐：Opus / AMR / LC3")).toBeInTheDocument();
   });
 
   it("switches system audio architecture lab flows", async () => {
