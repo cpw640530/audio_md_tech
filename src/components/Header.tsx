@@ -12,11 +12,11 @@ export function Header({ language, onToggleLanguage }: HeaderProps) {
 
   return (
     <header className="site-header">
-      <a className="brand" href="#top" aria-label="Audio Technology Knowledge Base">
+      <a className="brand" href="#top" aria-label="Audio Technology Explained">
         <span className="brand-mark">
           <LibraryBig size={20} aria-hidden="true" />
         </span>
-        <span>Audio MD Tech</span>
+        <span>Audio Technology Explained</span>
       </a>
       <nav className="header-actions" aria-label="Primary navigation">
         <a href="docs/audio_technology_knowledge_outline.md">{interfaceCopy.navDocs[language]}</a>

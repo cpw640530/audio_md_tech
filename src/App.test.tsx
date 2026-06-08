@@ -8,11 +8,11 @@ describe("Audio knowledge app", () => {
     const user = userEvent.setup();
     render(<App />);
 
-    expect(screen.getByRole("heading", { name: "音频技术知识库" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Audio Technology Explained" })).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "English" }));
 
-    expect(screen.getByRole("heading", { name: "Audio Technology Knowledge Base" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Audio Technology Explained" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "中文" })).toBeInTheDocument();
   });
 
@@ -446,7 +446,7 @@ describe("Audio knowledge app", () => {
 
     await user.click(screen.getByRole("button", { name: "返回知识库" }));
 
-    expect(screen.getByRole("heading", { name: "音频技术知识库" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Audio Technology Explained" })).toBeInTheDocument();
   });
 
   it("explains digital audio basics and links to the sampling lab", async () => {
@@ -497,7 +497,7 @@ describe("Audio knowledge app", () => {
 
     await user.click(screen.getByRole("button", { name: "返回知识库" }));
 
-    expect(screen.getByRole("heading", { name: "音频技术知识库" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Audio Technology Explained" })).toBeInTheDocument();
   });
 
   it("shows how quantized samples become PCM words", async () => {

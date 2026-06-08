@@ -1,5 +1,5 @@
 <p align="center">
-  <h1 align="center">音频技术科普知识库</h1>
+  <h1 align="center">Audio Technology Explained</h1>
   <p align="center">
     面向音频技术科普、网页内容规划和后续交互式学习页面的结构化知识库。
   </p>
@@ -14,7 +14,7 @@
   <img alt="Docs" src="https://img.shields.io/badge/docs-Markdown-blue">
   <img alt="App" src="https://img.shields.io/badge/app-React%20%2B%20Vite-1f9d8a">
   <img alt="Language" src="https://img.shields.io/badge/language-English%20%7C%20Chinese-brightgreen">
-  <img alt="Knowledge Base" src="https://img.shields.io/badge/type-Audio%20Knowledge%20Base-purple">
+  <img alt="Project Type" src="https://img.shields.io/badge/type-Audio%20Technology%20Explained-purple">
   <img alt="Status" src="https://img.shields.io/badge/status-planning-orange">
 </p>
 
@@ -22,7 +22,7 @@
 
 ## 项目简介
 
-音频技术科普知识库是一个内容优先的资料仓库，用于在制作网页、图解文章和交互式学习页面之前，先系统整理音频技术相关知识。
+Audio Technology Explained 是一个内容优先的资料仓库，用于在制作网页、图解文章和交互式学习页面之前，先系统整理音频技术相关知识。
 
 当前重点是建立一张清晰的知识地图，覆盖音频基础、硬件、软件、信号处理、AI 音频算法和真实应用场景。仓库中也包含一个 React/Vite 网页应用，用于浏览、搜索和筛选结构化后的知识内容。
 

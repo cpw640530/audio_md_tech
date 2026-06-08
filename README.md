@@ -1,7 +1,7 @@
 <p align="center">
-  <h1 align="center">Audio Technology Knowledge Base</h1>
+  <h1 align="center">Audio Technology Explained</h1>
   <p align="center">
-    A structured knowledge base for audio technology education, web content planning, and future interactive learning pages.
+    A structured knowledge base for explaining audio technology, planning web content, and building future interactive learning pages.
   </p>
 </p>
 
@@ -14,7 +14,7 @@
   <img alt="Docs" src="https://img.shields.io/badge/docs-Markdown-blue">
   <img alt="App" src="https://img.shields.io/badge/app-React%20%2B%20Vite-1f9d8a">
   <img alt="Language" src="https://img.shields.io/badge/language-English%20%7C%20Chinese-brightgreen">
-  <img alt="Knowledge Base" src="https://img.shields.io/badge/type-Audio%20Knowledge%20Base-purple">
+  <img alt="Project Type" src="https://img.shields.io/badge/type-Audio%20Technology%20Explained-purple">
   <img alt="Status" src="https://img.shields.io/badge/status-planning-orange">
 </p>
 
@@ -22,7 +22,7 @@
 
 ## Overview
 
-Audio Technology Knowledge Base is a content-first repository for organizing audio technology concepts before turning them into web pages, diagrams, articles, and interactive learning experiences.
+Audio Technology Explained is a content-first repository for organizing audio technology concepts before turning them into web pages, diagrams, articles, and interactive learning experiences.
 
 The current focus is to build a clear knowledge map covering audio fundamentals, hardware, software, signal processing, AI audio algorithms, and real-world applications. A React/Vite web app is included to browse, search, and filter the structured knowledge content.
 

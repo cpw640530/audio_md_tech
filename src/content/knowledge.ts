@@ -75,8 +75,8 @@ export const interfaceCopy = {
   navDocs: { zh: "文档", en: "Docs" },
   navGithub: { zh: "GitHub", en: "GitHub" },
   languageButton: { zh: "English", en: "中文" },
-  eyebrow: { zh: "音频技术科普", en: "Audio Technology Education" },
-  title: { zh: "音频技术知识库", en: "Audio Technology Knowledge Base" },
+  eyebrow: { zh: "音频技术科普", en: "Audio Technology Explained" },
+  title: { zh: "Audio Technology Explained", en: "Audio Technology Explained" },
   subtitle: {
     zh: "把音频基础、硬件、软件、传统 DSP、AI 算法和应用场景整理成可浏览、可搜索、可扩展的网页内容底座。",
     en: "A searchable, browsable foundation for audio fundamentals, hardware, software, traditional DSP, AI algorithms, and real-world applications."
