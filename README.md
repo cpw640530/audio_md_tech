@@ -53,7 +53,7 @@ It is designed for:
 
 Visit the published website:
 
-- [https://cpw640530.github.io/audio_md_tech/](https://cpw640530.github.io/audio_md_tech/)
+- [https://cpw640530.github.io/audio-technology-explained/](https://cpw640530.github.io/audio-technology-explained/)
 
 Start from the main knowledge outline:
 
@@ -71,7 +71,7 @@ npm run dev
 The default local URL is:
 
 ```text
-http://127.0.0.1:5173/audio_md_tech/
+http://127.0.0.1:5173/audio-technology-explained/
 ```
 
 Useful commands:

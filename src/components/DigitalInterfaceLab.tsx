@@ -501,7 +501,7 @@ function renderSpdifDiagram(language: Language) {
       <image
         aria-label={language === "zh" ? "SPDIF 同轴光纤线示例图" : "SPDIF coaxial optical cable example"}
         height="210"
-        href="/audio_md_tech/images/spdif-line.png"
+        href="/audio-technology-explained/images/spdif-line.png"
         preserveAspectRatio="xMidYMid slice"
         role="img"
         width="250"
@@ -550,7 +550,7 @@ function renderUsbDiagram(language: Language) {
       <image
         aria-label={language === "zh" ? "USB 外置声卡示例图" : "USB external sound card example"}
         height="210"
-        href="/audio_md_tech/images/usb-audio-card.png.png"
+        href="/audio-technology-explained/images/usb-audio-card.png.png"
         preserveAspectRatio="xMidYMid slice"
         role="img"
         width="250"
